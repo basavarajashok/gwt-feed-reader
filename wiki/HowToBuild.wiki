@@ -15,7 +15,7 @@ svn ps svn:externals 'ajaxfeed http://gwt-feed-reader.googlecode.com/svn/trunk/'
 
 }}}
     # Add `ajaxfeed` to the `-do` target's dependencies
+  # Obtain an [http://code.google.com/apis/ajaxfeeds/signup.html API key].
+  # Rename `src/com/google/gwt/sample/ajaxfeed/public/AjaxFeed.html.template` and add your API key to the script tag that imports the Google JavaScript loader.
   # Run `ant samples` to compile.  The output will be in `build/out/samples/AjaxFeed`
   # Alternatively, run `ant dist` and unpack the platform-specific file in `build/dist`
-
-
