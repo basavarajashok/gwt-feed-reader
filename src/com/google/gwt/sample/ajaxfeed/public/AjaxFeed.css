@@ -1,0 +1,73 @@
+.header {
+  width: 100%;
+  background: #eee;
+  padding-left: 0.5em;
+}
+
+.header input {
+  font-size: smaller;
+}
+
+.logo {
+  opacity: 0.4;
+  top: 0.5em !important;
+  left: 0.5em !important;
+}
+
+.PanelLabel {
+  width: 100%;
+  border-bottom: 2px solid #eee;
+  padding: 2ex;
+  cursor: pointer;
+}
+
+.partial {
+  font-weight: lighter;
+}
+
+.permalink {
+  font-size: x-small;
+  background: #eee;
+}
+
+.SliderPanel {
+  background: white;
+  width: 100%;
+}
+
+.snippit {
+  font-size: x-small;
+}
+
+.statusLabel {
+  font-size: x-small;
+  background: #eee;
+}
+
+
+.unseen {
+  font-weight: bold !important;
+}
+
+#__gwt_historyFrame {
+  height: 0;
+  width: 0;
+  position: static !important;
+  visibility: hidden !important;
+}
+
+#loading {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  z-index: -1;
+}
+
+body {
+  font-family: Arial serif;
+  background: silver;
+}
+
+img {
+  max-width: 95% !important;
+}
