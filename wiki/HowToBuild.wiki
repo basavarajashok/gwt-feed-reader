@@ -1,0 +1,21 @@
+#summary How to build the sample application
+
+  # Check out the Google Web Toolkit as described in [http://code.google.com/webtoolkit/makinggwtbetter.html Making GWT Better]
+  # From the trunk directory:
+{{{
+svn ps svn:externals 'ajaxfeed http://gwt-feed-reader.googlecode.com/svn/trunk/' samples
+}}}
+  # Run `svn update` to download the AjaxFeed code
+  # Edit `samples/build.xml`:
+    # Add a new target
+{{{
+<target name="ajaxfeed" description="Build ajaxfeed">
+  <gwt.ant dir="ajaxfeed" />
+</target>
+
+}}}
+    # Add `ajaxfeed` to the `-do` target's dependencies
+  # Run `ant samples` to compile.  The output will be in `build/out/samples/AjaxFeed`
+  # Alternatively, run `ant dist` and unpack the platform-specific file in `build/dist`
+
+
