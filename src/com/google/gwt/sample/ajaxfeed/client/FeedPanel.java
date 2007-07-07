@@ -22,6 +22,7 @@ import com.google.gwt.ajaxfeed.client.impl.FeedResultApi;
 import com.google.gwt.ajaxfeed.client.impl.JsonFeedApi;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
@@ -96,7 +97,7 @@ public class FeedPanel extends SliderPanel {
     panelLabel.setTitle(feed.getUrl());
 
     addStyleName("FeedPanel");
-    setPermalink(feed.getUrl());
+    setPermalink(URL.encodeComponent(feed.getUrl()));
     setText("Loading");
     toLoad.add(this);
   }
@@ -164,6 +165,9 @@ public class FeedPanel extends SliderPanel {
       return;
     }
 
+    /*
+     * This resets the label's unread counter.
+     */
     IncrementalCommand labelSetup = new IncrementalCommand() {
       int newEntries = 0;
       Iterator i = entries.iterator();
@@ -226,7 +230,7 @@ public class FeedPanel extends SliderPanel {
       // happen
       public boolean execute() {
         EntryWrapper entry = (EntryWrapper) i.next();
-        EntryPanel panel = new EntryPanel(entry, FeedPanel.this, null);
+        EntryPanel panel = new EntryPanel(entry, FeedPanel.this);
         add(panel.getLabel());
         return i.hasNext();
       }

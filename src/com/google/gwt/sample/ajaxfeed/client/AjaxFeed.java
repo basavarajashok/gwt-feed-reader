@@ -16,6 +16,7 @@
 package com.google.gwt.sample.ajaxfeed.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Timer;
@@ -84,6 +85,8 @@ public class AjaxFeed implements EntryPoint {
     if (token.length() == 0) {
       return;
     }
+    
+    token = URL.decodeComponent(token);
 
     if ("manifest".equals(token)) {
       manifest.enter();

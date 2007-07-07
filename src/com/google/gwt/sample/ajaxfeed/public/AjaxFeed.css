@@ -1,11 +1,51 @@
-.header {
-  width: 100%;
-  background: #eee;
-  padding-left: 0.5em;
+.button {
+    width: auto;
+    -webkit-border-image: url(iPhoneButton.png) 0 5 0 5;
+    -webkit-border-radius: 0;
+    border-width: 0 5px 0 5px;
+    padding: 0;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+    text-decoration: none;
+    background: none;
 }
 
-.header input {
-  font-size: smaller;
+.backButton {
+    -webkit-border-image: url(iPhoneBackButton.png) 0 8 0 14;
+    border-width: 0 8px 0 14px;
+}
+
+.goButton {
+    -webkit-border-image: url(iPhoneGoButton.png) 0 5 0 5;
+    border-width: 0 5px;
+}
+
+.header {
+  margin: 0;
+  padding: 10px;
+  width: 100%;
+  line-height: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+  color: #FFFFFF;
+  background: url("iPhoneToolbar.png") #6d84a2 repeat-x;
+  border-bottom: 1px solid #2d3642;
+}
+
+.footer {
+  width: 100%;
+  font-size: small;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
+  color: #FFFFFF;
+  background: #6d84a2 repeat-x;
+  border-top: 1px solid #2d3642;
 }
 
 .logo {
@@ -25,12 +65,9 @@
   font-weight: lighter;
 }
 
-.permalink {
-  font-size: x-small;
-  background: #eee;
-}
-
 .SliderPanel {
+  overflow: hidden;
+  text-overflow: ellipsis;
   background: white;
   width: 100%;
 }
@@ -38,12 +75,6 @@
 .snippit {
   font-size: x-small;
 }
-
-.statusLabel {
-  font-size: x-small;
-  background: #eee;
-}
-
 
 .unseen {
   font-weight: bold !important;
@@ -61,13 +92,15 @@
   top: 0.5em;
   right: 0.5em;
   z-index: -1;
+  border: thin solid #2d3642;
+  -webkit-border-radius: 0.25ex;
 }
 
 body {
-  font-family: Arial serif;
-  background: silver;
+  font-family: Helvetica serif;
+  background: url("pinstripes.png") silver;
 }
 
 img {
-  max-width: 95% !important;
+  max-width: 200px !important;
 }

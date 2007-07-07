@@ -57,8 +57,9 @@ public class ConfigurationPanel extends SliderPanel {
     Label title = new Label("Add feed...");
     title.addStyleName("title");
     HTML fastAdd = new HTML(
-        "To quickly add many URLs, send yourself an IM with links like:<br/>"
-            + GWT.getHostPageBaseURL() + "AjaxFeed.html#http://foo.com/foo.rss");
+        "To quickly add many URLs, send yourself an IM with permalinks "
+            + Images.INSTANCE.popout().getHTML() + " found "
+            + "at the bottom of each feed panel.");
     fastAdd.addStyleName("snippit");
 
     VerticalPanel vp = new VerticalPanel();
