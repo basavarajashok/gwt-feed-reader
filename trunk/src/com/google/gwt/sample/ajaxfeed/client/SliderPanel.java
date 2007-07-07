@@ -17,7 +17,6 @@ package com.google.gwt.sample.ajaxfeed.client;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -37,7 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class SliderPanel extends Composite implements HasHTML {
 
   private static SliderPanel activePanel;
-  
+
   protected final ClickListener parentClickListener = new ClickListener() {
     public void onClick(Widget w) {
       exit();
@@ -63,26 +62,36 @@ public abstract class SliderPanel extends Composite implements HasHTML {
       }
     });
 
-    header.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+    header.setVerticalAlignment(HorizontalPanel.ALIGN_TOP);
     header.addStyleName("header");
     if (parent != null) {
-      header.add(new Button(parent.getShortTitle(), parentClickListener));
+      Label l = new Label(parent.getShortTitle());
+      l.addClickListener(parentClickListener);
+      l.addStyleName("button");
+      l.addStyleName("backButton");
+      header.add(l);
     }
 
-    header.add(new Label(title));
+    Label titleLabel = new Label(title);
+    header.add(titleLabel);
+    header.setCellWidth(titleLabel, "100%");
+    header.setCellHorizontalAlignment(titleLabel, HorizontalPanel.ALIGN_CENTER);
 
     FlowPanel vp = new FlowPanel();
     vp.add(header);
 
     contents.addStyleName("contents");
     vp.add(contents);
-    
-    statusLabel.addStyleName("statusLabel");
-    vp.add(statusLabel);
-    
-    permalink.addStyleName("permalink");
+
+    HorizontalPanel footer = new HorizontalPanel();
+    footer.setStyleName("footer");
+    footer.add(statusLabel);
+    footer.setCellWidth(statusLabel, "100%");
+
     permalink.setVisible(false);
-    vp.add(permalink);
+    footer.add(permalink);
+
+    vp.add(footer);
 
     initWidget(vp);
     addStyleName("SliderPanel");
@@ -96,7 +105,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
 
     contents.add(label);
   }
-  
+
   public void clear() {
     contents.clear();
   }
@@ -112,21 +121,23 @@ public abstract class SliderPanel extends Composite implements HasHTML {
   public String getText() {
     return hasText == null ? null : hasText.getText();
   }
-  
+
   public void remove(PanelLabel label) {
     contents.remove(label);
   }
 
   public void setEditCommand(String label, String title, Command command) {
     editCommand = command;
-    Button b = new Button(label, new ClickListener() {
+    Label l = new Label(label);
+    l.addStyleName("button");
+    l.setTitle(title);
+    l.addClickListener(new ClickListener() {
       public void onClick(Widget w) {
         editCommand.execute();
       }
     });
-    b.setTitle(title);
-    header.add(b);
-    header.setCellHorizontalAlignment(b, HorizontalPanel.ALIGN_RIGHT);
+    header.add(l);
+    header.setCellHorizontalAlignment(l, HorizontalPanel.ALIGN_RIGHT);
   }
 
   public void setHTML(String html) {
@@ -136,17 +147,17 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     contents.clear();
     contents.add(h);
   }
-  
+
   public void setPermalink(String token) {
     if (token == null) {
       permalink.setVisible(false);
     } else {
-      permalink.setText("Permalink");
+      permalink.setHTML(Images.INSTANCE.popout().getHTML());
       permalink.setTargetHistoryToken(token);
       permalink.setVisible(true);
     }
   }
-  
+
   public void setStatus(String status) {
     statusLabel.setText(status);
   }
@@ -164,13 +175,14 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     if (activePanel != null) {
       RootPanel.get().remove(activePanel);
     }
-    
+    activePanel = SliderPanel.this;
+    RootPanel.get().add(SliderPanel.this, 0, 0);
+
     DeferredCommand.addPause();
     DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        activePanel = SliderPanel.this;
-        RootPanel.get().add(SliderPanel.this, 0, 0);
-      }
+      public native void execute() /*-{
+       $wnd.scrollTo(0, 1);
+       }-*/;
     });
   }
 
@@ -178,7 +190,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     if (parent == null) {
       throw new RuntimeException("SliderPanel has no parent");
     }
-    
+
     parent.enter();
   }
 

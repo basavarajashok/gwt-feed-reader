@@ -31,7 +31,7 @@ public class EntryPanel extends SliderPanel {
   final PanelLabel panelLabel;
   boolean contentsSet = false;
   
-  public EntryPanel(final EntryWrapper entry, SliderPanel parent, SliderPanel root) {
+  public EntryPanel(final EntryWrapper entry, SliderPanel parent) {
     super(entry.getTitle(), parent);
     addStyleName("EntryPanel");
     this.entry = entry;
@@ -64,7 +64,6 @@ public class EntryPanel extends SliderPanel {
       return;
     }
     
-    History.newItem("");
     if (!contentsSet) {
       add(new PanelLabel(entry.getContent(), null, true));
       add(new PanelLabel("Open article", new Command() {
@@ -75,6 +74,7 @@ public class EntryPanel extends SliderPanel {
      contentsSet = true;
     }
     super.enter();
+    History.newItem("");
   }
   
   public PanelLabel getLabel() {

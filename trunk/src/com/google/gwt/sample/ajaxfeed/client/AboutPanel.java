@@ -36,7 +36,7 @@ public class AboutPanel extends SliderPanel {
 
     hp.add(new HTML("AjaxFeed<br/>"
         + "An RSS reader using the Google AJAX Feed API "
-        + "and the Google Web Toolkit<br/>" + "Copyright 2007 Google Inc."));
+        + "and the Google Web Toolkit"));
     add(new PanelLabel(hp, null));
   }
 

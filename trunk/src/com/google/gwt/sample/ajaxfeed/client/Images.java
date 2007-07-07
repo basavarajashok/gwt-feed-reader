@@ -26,7 +26,7 @@ public interface Images extends ImageBundle {
   public static final Images INSTANCE = (Images) GWT.create(Images.class);
   
   /**
-   * @gwt.resource rightChevron.gif
+   * @gwt.resource iPhoneArrow.png
    */
   public AbstractImagePrototype enter();
 
@@ -34,4 +34,9 @@ public interface Images extends ImageBundle {
    * @gwt.resource gwtLogo.png
    */
   public AbstractImagePrototype logo();
+  
+  /**
+   * @gwt.resource newwindow.png
+   */
+  public AbstractImagePrototype popout();
 }
