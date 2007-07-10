@@ -1,6 +1,7 @@
 #summary How to build the sample application
 
   # Check out the Google Web Toolkit as described in [http://code.google.com/webtoolkit/makinggwtbetter.html Making GWT Better]
+  # If [http://code.google.com/p/google-web-toolkit/issues/detail?id=1178 issue 1178] is unresolved, apply the [http://gwt-feed-reader.googlecode.com/files/history_iphone_r1227.patch iPhone History patch].
   # From the trunk directory:
 {{{
 svn ps svn:externals 'ajaxfeed http://gwt-feed-reader.googlecode.com/svn/trunk/' samples
