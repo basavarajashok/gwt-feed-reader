@@ -21,12 +21,11 @@ import com.google.gwt.jsio.client.JSFlyweightWrapper;
 /**
  * @gwt.beanProperties
  */
-public interface FeedResultApi extends JSFlyweightWrapper {
+public interface LookupResultApi extends JSFlyweightWrapper {
   /**
    * @gwt.binding
    */
   public void bind(JavaScriptObject result);
   public ErrorWrapper getError(JavaScriptObject result);
-  public JavaScriptObject getFeed(JavaScriptObject result);
-//  public JavaScriptObject getXmlDocument(JavaScriptObject result);
+  public String getUrl(JavaScriptObject result);
 }

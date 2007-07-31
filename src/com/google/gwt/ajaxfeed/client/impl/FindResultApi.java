@@ -17,16 +17,29 @@ package com.google.gwt.ajaxfeed.client.impl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.jsio.client.JSFlyweightWrapper;
+import com.google.gwt.jsio.client.JSList;
+import com.google.gwt.jsio.client.JSWrapper;
 
 /**
  * @gwt.beanProperties
  */
-public interface FeedResultApi extends JSFlyweightWrapper {
+public interface FindResultApi extends JSFlyweightWrapper {
+  /**
+   * @gwt.beanProperties
+   */
+  public static interface Entry extends JSWrapper {
+    public String getContentSnippet();
+    public String getLink();
+    public String getTitle();
+    public String getUrl();
+  }
   /**
    * @gwt.binding
    */
   public void bind(JavaScriptObject result);
+  /**
+   * @gwt.typeArgs <com.google.gwt.ajaxfeed.client.impl.FindResultApi.Entry>
+   */
+  public JSList getEntries(JavaScriptObject result);
   public ErrorWrapper getError(JavaScriptObject result);
-  public JavaScriptObject getFeed(JavaScriptObject result);
-//  public JavaScriptObject getXmlDocument(JavaScriptObject result);
 }

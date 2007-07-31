@@ -27,7 +27,9 @@ import java.util.Iterator;
  */
 public class ManifestPanel extends SliderPanel {
   private final Configuration configuration;
-  private final HashMap/*<Feed, FeedPanel>*/ feedPanelMap = new HashMap();
+  private final HashMap/* <Feed, FeedPanel> */feedPanelMap = new HashMap();
+  
+  private boolean dirty = true;
 
   public ManifestPanel(final Configuration configuration) {
     super("Feeds", null);
@@ -35,7 +37,7 @@ public class ManifestPanel extends SliderPanel {
 
     setEditCommand("Edit", "Edits feeds", new Command() {
       public void execute() {
-        (new ConfigurationPanel(configuration, ManifestPanel.this)).enter();
+        History.newItem("configuration");
       }
     });
 
@@ -43,11 +45,12 @@ public class ManifestPanel extends SliderPanel {
     setStatus("Loading feeds...");
     refresh();
   }
-  
+
   public void enter() {
-    if (isAttached()) {
-      return;
+    if (dirty) {
+      refresh();
     }
+    
     super.enter();
     History.newItem("manifest");
   }
@@ -56,10 +59,35 @@ public class ManifestPanel extends SliderPanel {
     throw new RuntimeException("This should not be called on the root panel");
   }
 
-  public void refresh() {
+  public void showFeed(Configuration.Feed feed) {
+    FeedPanel p = (FeedPanel) feedPanelMap.get(feed);
+    if (p == null) {
+      // We don't want to take the hit of reloading everything, so defer this
+      // until the panel is re-shown.
+      setDirty();
+      p = new FeedPanel(feed, this);
+      feedPanelMap.put(feed, p);
+    }
+    p.enter();
+  }
+
+  protected String getShortTitle() {
+    return "Feeds";
+  }
+
+  void setDirty() {
+    dirty = true;
+  }
+  
+  void showConfiguration() {
+    (new ConfigurationPanel(configuration, this)).enter();
+  }
+  
+  private void refresh() {
+    dirty = false;
     clear();
     feedPanelMap.clear();
-    
+
     for (Iterator i = configuration.getFeeds().iterator(); i.hasNext();) {
       Configuration.Feed feed = (Configuration.Feed) i.next();
 
@@ -68,16 +96,5 @@ public class ManifestPanel extends SliderPanel {
       add(panel.getLabel());
     }
     setStatus("Ready");
-  }
-  
-  public void showFeed(Configuration.Feed feed) {
-    FeedPanel p = (FeedPanel)feedPanelMap.get(feed);
-    if (p != null) {
-      p.enter();
-    }
-  }
-
-  protected String getShortTitle() {
-    return "Feeds";
   }
 }

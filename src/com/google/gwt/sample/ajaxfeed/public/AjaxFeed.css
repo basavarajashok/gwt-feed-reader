@@ -101,6 +101,10 @@ body {
   background: url("pinstripes.png") silver;
 }
 
+iframe {
+  display: none;
+}
+
 img {
   max-width: 200px !important;
 }

@@ -92,9 +92,14 @@ public class AjaxFeed implements EntryPoint {
       manifest.enter();
       return;
     }
+    
+    if ("configuration".equals(token)) {
+      manifest.showConfiguration();
+      return;
+    }
 
     if (configuration.importFeeds(token)) {
-      manifest.refresh();
+      manifest.setDirty();
     }
 
     Configuration.Feed feed = configuration.findFeed(token);

@@ -15,18 +15,18 @@
  */
 package com.google.gwt.ajaxfeed.client.impl;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.jsio.client.JSFlyweightWrapper;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.jsio.client.JSWrapper;
 
 /**
- * @gwt.beanProperties
+ * Encapsulates "global" functions in the Ajax Feed API.
+ * 
+ * @gwt.global $wnd.google.feeds
  */
-public interface FeedResultApi extends JSFlyweightWrapper {
-  /**
-   * @gwt.binding
-   */
-  public void bind(JavaScriptObject result);
-  public ErrorWrapper getError(JavaScriptObject result);
-  public JavaScriptObject getFeed(JavaScriptObject result);
-//  public JavaScriptObject getXmlDocument(JavaScriptObject result);
+public abstract class Globals implements JSWrapper {
+  public static final Globals API = (Globals) GWT.create(Globals.class);
+
+  public abstract void findFeeds(String query, FeedCallback callback);
+
+  public abstract void lookupFeed(String url, FeedCallback callback);
 }
