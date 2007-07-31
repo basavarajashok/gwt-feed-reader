@@ -172,6 +172,10 @@ public abstract class SliderPanel extends Composite implements HasHTML {
   }
 
   protected void enter() {
+    if (isAttached()) {
+      return;
+    }
+    
     if (activePanel != null) {
       RootPanel.get().remove(activePanel);
     }

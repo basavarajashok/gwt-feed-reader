@@ -89,10 +89,9 @@ public class Configuration {
       "http://thinkgeek.com/thinkgeek.rss", "http://ajaxian.com/index.xml",};
 
   private static final String COOKIE_NAME = "AjaxFeed";
-  private static final String COOKIE_PATH = "/AjaxFeed";
 
   private final Container container = (Container) GWT.create(Container.class);
-  
+
   public Configuration() {
     String cookieData = Cookies.getCookie(COOKIE_NAME);
     if (cookieData != null) {
@@ -106,15 +105,15 @@ public class Configuration {
       initialize();
     }
   }
-  
+
   public Feed findFeed(String url) {
     for (Iterator i = getFeeds().iterator(); i.hasNext();) {
-      Feed feed = (Feed)i.next();
+      Feed feed = (Feed) i.next();
       if (feed.getUrl().equals(url)) {
         return feed;
       }
     }
-    
+
     return null;
   }
 
@@ -163,12 +162,12 @@ public class Configuration {
         feeds.add(f);
       }
     }
-    
+
     save();
-    
+
     return true;
   }
-  
+
   public void reset() {
     Cookies.removeCookie(COOKIE_NAME);
     getFeeds().clear();
@@ -184,10 +183,11 @@ public class Configuration {
   }
 
   private void initialize() {
-    if (!Window.confirm("You have no feeds configured.  Would you like a default selection?")) {
+    if (!Window.confirm("You have no feeds configured."
+        + " Would you like a default selection?")) {
       return;
     }
-    
+
     JSList feeds = container.getFeeds();
 
     for (int i = 0; i < FEEDS.length; i++) {

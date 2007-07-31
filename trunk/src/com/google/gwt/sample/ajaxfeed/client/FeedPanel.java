@@ -16,6 +16,7 @@
 package com.google.gwt.sample.ajaxfeed.client;
 
 import com.google.gwt.ajaxfeed.client.impl.EntryWrapper;
+import com.google.gwt.ajaxfeed.client.impl.ErrorWrapper;
 import com.google.gwt.ajaxfeed.client.impl.FeedApi;
 import com.google.gwt.ajaxfeed.client.impl.FeedCallback;
 import com.google.gwt.ajaxfeed.client.impl.FeedResultApi;
@@ -134,15 +135,19 @@ public class FeedPanel extends SliderPanel {
       }
     });
   }
+  
+  public void setDirty() {
+    dirty = true;
+  }
 
   public void setFeedResult(JavaScriptObject feedResult) {
     // Fix up any missing fields
     resultApi.bind(feedResult);
 
-    JavaScriptObject errorResponse = resultApi.getError(feedResult);
+    ErrorWrapper errorResponse = resultApi.getError(feedResult);
     if (errorResponse != null) {
       getLabel().setText(feed.getTitle() + " (Error)");
-      setText("Unable to load feed");
+      setText("Unable to load feed (" + errorResponse.getMessage() + ")");
       return;
     }
 
@@ -222,7 +227,7 @@ public class FeedPanel extends SliderPanel {
     dirty = false;
 
     clear();
-
+    
     DeferredCommand.addCommand(new IncrementalCommand() {
       final Iterator i = entries.iterator();
 

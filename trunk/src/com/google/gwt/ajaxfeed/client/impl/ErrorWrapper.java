@@ -15,18 +15,13 @@
  */
 package com.google.gwt.ajaxfeed.client.impl;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.jsio.client.JSFlyweightWrapper;
+import com.google.gwt.jsio.client.JSWrapper;
 
 /**
+ * Wraps an error message in the Ajax Feed API.
  * @gwt.beanProperties
  */
-public interface FeedResultApi extends JSFlyweightWrapper {
-  /**
-   * @gwt.binding
-   */
-  public void bind(JavaScriptObject result);
-  public ErrorWrapper getError(JavaScriptObject result);
-  public JavaScriptObject getFeed(JavaScriptObject result);
-//  public JavaScriptObject getXmlDocument(JavaScriptObject result);
+public interface ErrorWrapper extends JSWrapper {
+  public int getCode();
+  public String getMessage();
 }

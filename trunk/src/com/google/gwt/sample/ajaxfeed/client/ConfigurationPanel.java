@@ -15,7 +15,12 @@
  */
 package com.google.gwt.sample.ajaxfeed.client;
 
+import com.google.gwt.ajaxfeed.client.impl.ErrorWrapper;
+import com.google.gwt.ajaxfeed.client.impl.FeedCallback;
+import com.google.gwt.ajaxfeed.client.impl.Globals;
+import com.google.gwt.ajaxfeed.client.impl.LookupResultApi;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
@@ -47,6 +52,7 @@ public class ConfigurationPanel extends SliderPanel {
           return;
         }
         configuration.reset();
+        parent.setDirty();
         exit();
       }
     });
@@ -54,30 +60,72 @@ public class ConfigurationPanel extends SliderPanel {
     AboutPanel about = new AboutPanel(this);
     add(about.getLabel());
 
-    Label title = new Label("Add feed...");
-    title.addStyleName("title");
-    HTML fastAdd = new HTML(
-        "To quickly add many URLs, send yourself an IM with permalinks "
-            + Images.INSTANCE.popout().getHTML() + " found "
-            + "at the bottom of each feed panel.");
-    fastAdd.addStyleName("snippit");
+    // Create the add URL option
+    {
+      Label title = new Label("Add feed URL...");
+      title.addStyleName("title");
+      HTML fastAdd = new HTML(
+          "To quickly add many URLs, send yourself an IM with permalinks "
+              + Images.INSTANCE.popout().getHTML() + " found "
+              + "at the bottom of each feed panel.");
+      fastAdd.addStyleName("snippit");
 
-    VerticalPanel vp = new VerticalPanel();
-    vp.add(title);
-    vp.add(fastAdd);
+      VerticalPanel vp = new VerticalPanel();
+      vp.add(title);
+      vp.add(fastAdd);
 
-    add(new PanelLabel(vp, new Command() {
-      public void execute() {
-        String url = Window.prompt("Feed address", "http://");
-        if (url != null) {
-          Configuration.Feed f = (Configuration.Feed) GWT.create(Configuration.Feed.class);
-          f.setTitle(url);
-          f.setUrl(url);
-          feeds.add(f);
-          addFeed(f);
+      add(new PanelLabel(vp, new Command() {
+        public void execute() {
+          final String url = Window.prompt("Feed address", "http://");
+          if (url != null) {
+            FeedCallback fc = new FeedCallback() {
+              public void onLoad(JavaScriptObject jso) {
+                LookupResultApi l = (LookupResultApi) GWT.create(LookupResultApi.class);
+                l.bind(jso);
+
+                ErrorWrapper error = l.getError(jso);
+                if (error != null) {
+                  Window.alert("Unable to add feed.\n" + error.getMessage());
+                  return;
+                }
+
+                Configuration.Feed f = (Configuration.Feed) GWT.create(Configuration.Feed.class);
+                f.setTitle(url);
+                f.setUrl(url);
+                feeds.add(f);
+                parent.setDirty();
+                addFeed(f);
+              }
+            };
+
+            Globals.API.lookupFeed(url, fc);
+          }
         }
-      }
-    }));
+      }));
+    }
+
+    // Create the search option
+    {
+      Label title = new Label("Search for feeds...");
+      title.addStyleName("title");
+      Label info = new Label("Add feeds by searching.");
+      info.addStyleName("snippit");
+
+      VerticalPanel vp = new VerticalPanel();
+      vp.add(title);
+      vp.add(info);
+
+      add(new PanelLabel(vp, new Command() {
+        public void execute() {
+          final String query = Window.prompt("Search query", "");
+          if ((query != null) && (query.length() > 0)) {
+            FeedSelectPanel selector = new FeedSelectPanel(
+                ConfigurationPanel.this, configuration, query);
+            selector.enter();
+          }
+        }
+      }));
+    }
 
     for (Iterator i = feeds.iterator(); i.hasNext();) {
       final Configuration.Feed feed = (Configuration.Feed) i.next();
@@ -106,11 +154,6 @@ public class ConfigurationPanel extends SliderPanel {
     add(p);
   }
 
-  protected void exit() {
-    parent.refresh();
-    super.exit();
-  }
-
   protected String getShortTitle() {
     return "Configuration";
   }
@@ -119,7 +162,7 @@ public class ConfigurationPanel extends SliderPanel {
     if (Window.confirm("Do you wish to remove the feed?")) {
       configuration.getFeeds().remove(feed);
       remove((PanelLabel) feedLabels.get(feed));
+      parent.setDirty();
     }
   }
-
 }
