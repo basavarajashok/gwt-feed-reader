@@ -20,12 +20,14 @@ import com.google.gwt.jsio.client.JSFlyweightWrapper;
 import com.google.gwt.jsio.client.JSList;
 
 /**
+ * Provides an interface to JSON-formatted Feed objects.
  * @gwt.beanProperties
  */
 public interface JsonFeedApi extends JSFlyweightWrapper {
   public String getAuthor(JavaScriptObject result);
   public String getDescription(JavaScriptObject result);
   /**
+   * A List of EntryWrapper objects.
    * @gwt.typeArgs <com.google.gwt.ajaxfeed.client.impl.EntryWrapper>
    */
   public JSList getEntries(JavaScriptObject result);

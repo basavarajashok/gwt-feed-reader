@@ -30,10 +30,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * TODO.
+ * Encapsulates the long-term state of the application.
  */
 public class Configuration {
   /**
+   * A JSON object that encapsulates the metadata for a feed.
    * @gwt.beanProperties
    */
   public abstract static class Feed implements JSWrapper {
@@ -56,11 +57,14 @@ public class Configuration {
   }
 
   /**
+   * The top-level JSON object that encapsulates the configuration of the
+   * application.
    * @gwt.beanProperties
    */
   abstract static class Container implements JSWrapper {
     /**
      * @gwt.typeArgs <com.google.gwt.sample.ajaxfeed.client.Configuration.Feed>
+     * @return A live List of Feed objects
      */
     public abstract JSList getFeeds();
 
@@ -90,6 +94,9 @@ public class Configuration {
 
   private static final String COOKIE_NAME = "AjaxFeed";
 
+  /**
+   * The one instance of the JSON configuration container.
+   */
   private final Container container = (Container) GWT.create(Container.class);
 
   public Configuration() {
@@ -106,6 +113,9 @@ public class Configuration {
     }
   }
 
+  /**
+   * Retrieve the metadata associated with a particular feed URL.
+   */
   public Feed findFeed(String url) {
     for (Iterator i = getFeeds().iterator(); i.hasNext();) {
       Feed feed = (Feed) i.next();
@@ -117,10 +127,18 @@ public class Configuration {
     return null;
   }
 
+  /**
+   * Returns the live list of Feed metadata objects.  Modifications to this
+   * object will be reflected throughout the application.
+   */
   public List getFeeds() {
     return container.getFeeds();
   }
 
+  /**
+   * Add a pipe-delimited set of feed URLs to the configuration.
+   * @return <code>true</code> iff at least one new feed was added.
+   */
   public boolean importFeeds(String token) {
     Set toAdd = new HashSet(Arrays.asList(token.split("\\|")));
     List feeds = getFeeds();
@@ -168,12 +186,18 @@ public class Configuration {
     return true;
   }
 
+  /**
+   * Delete the application's configuration.
+   */
   public void reset() {
     Cookies.removeCookie(COOKIE_NAME);
     getFeeds().clear();
     initialize();
   }
 
+  /**
+   * Save the configuration into the application's cookie.
+   */
   public void save() {
     Cookies.setCookie(COOKIE_NAME, container.toString(), new Date(
         System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365), null, null,
@@ -182,6 +206,9 @@ public class Configuration {
     System.out.println(Cookies.getCookie(COOKIE_NAME));
   }
 
+  /**
+   * This method would not be strictly necessary with some server-side support.
+   */
   private void initialize() {
     if (!Window.confirm("You have no feeds configured."
         + " Would you like a default selection?")) {

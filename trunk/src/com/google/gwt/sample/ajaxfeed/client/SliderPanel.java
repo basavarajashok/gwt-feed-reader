@@ -30,8 +30,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * TODO.
- * 
+ * This is the base class for all of the major UI panels. It is designed to fill
+ * the full width of the client area and to have at most a single instance
+ * attached to the DOM. The panel has a concept of having a parent or previous
+ * panel that can be accessed by a "back" button, as well as a distinct "edit"
+ * or alternate command that can be accessed by a second button in the title
+ * bar. The contents of the panel should consist only of PanelLabel widgets.
  */
 public abstract class SliderPanel extends Composite implements HasHTML {
 
@@ -126,6 +130,12 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     contents.remove(label);
   }
 
+  /**
+   * Set the command to be executed by a right-justified button in the title bar.
+   * @param label the label for the button
+   * @param title the title or alt-text for the button
+   * @param command the Command to execute when the button is pressed.
+   */
   public void setEditCommand(String label, String title, Command command) {
     editCommand = command;
     Label l = new Label(label);
@@ -148,6 +158,10 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     contents.add(h);
   }
 
+  /**
+   * Add a permalink to the bottom of the panel.
+   * @param token the history token to associate with the link
+   */
   public void setPermalink(String token) {
     if (token == null) {
       permalink.setVisible(false);
@@ -158,6 +172,10 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     }
   }
 
+  /**
+   * Set a status message at the bottom of the panel.
+   * @param status the new status message
+   */
   public void setStatus(String status) {
     statusLabel.setText(status);
   }
@@ -171,11 +189,16 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     contents.add(l);
   }
 
+  /**
+   * Display the panel, removing any currently-displayed panel from the screen.
+   * If the panel is already displayed, calling this method again will produce
+   * no result.
+   */
   protected void enter() {
     if (isAttached()) {
       return;
     }
-    
+
     if (activePanel != null) {
       RootPanel.get().remove(activePanel);
     }
@@ -190,6 +213,9 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     });
   }
 
+  /**
+   * Return to the parent panel.
+   */
   protected void exit() {
     if (parent == null) {
       throw new RuntimeException("SliderPanel has no parent");
@@ -198,5 +224,8 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     parent.enter();
   }
 
+  /**
+   * A short title to be used as the label of the back button.
+   */
   protected abstract String getShortTitle();
 }

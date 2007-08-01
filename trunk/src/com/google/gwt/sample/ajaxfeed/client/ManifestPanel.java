@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * TODO.
- * 
+ * The main view; a list of all of the configured feeds.
  */
 public class ManifestPanel extends SliderPanel {
   private final Configuration configuration;

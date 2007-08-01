@@ -19,6 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.jsio.client.JSFlyweightWrapper;
 
 /**
+ * An interface to the result from a lookupFeed() invocation.
  * @gwt.beanProperties
  */
 public interface LookupResultApi extends JSFlyweightWrapper {

@@ -21,10 +21,12 @@ import com.google.gwt.jsio.client.JSList;
 import com.google.gwt.jsio.client.JSWrapper;
 
 /**
+ * Wraps the results from invoking the findFeeds() function.
  * @gwt.beanProperties
  */
 public interface FindResultApi extends JSFlyweightWrapper {
   /**
+   * Encapsulates a feed search result.
    * @gwt.beanProperties
    */
   public static interface Entry extends JSWrapper {
@@ -38,6 +40,7 @@ public interface FindResultApi extends JSFlyweightWrapper {
    */
   public void bind(JavaScriptObject result);
   /**
+   * Returns a List of FindResultApi.Entry objects.
    * @gwt.typeArgs <com.google.gwt.ajaxfeed.client.impl.FindResultApi.Entry>
    */
   public JSList getEntries(JavaScriptObject result);
