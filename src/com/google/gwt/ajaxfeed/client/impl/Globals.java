@@ -26,7 +26,17 @@ import com.google.gwt.jsio.client.JSWrapper;
 public abstract class Globals implements JSWrapper {
   public static final Globals API = (Globals) GWT.create(Globals.class);
 
+  /**
+   * Used to conduct a search for feeds with articles relevant to the provided query.
+   * @param query the search query
+   * @param callback a callback to be invoked when a response is available
+   */
   public abstract void findFeeds(String query, FeedCallback callback);
 
+  /**
+   * Used to canonicalize and verify the existence of a feed's URL.
+   * @param url the url to verify
+   * @param callback a callback to be invoked when a response is available
+   */
   public abstract void lookupFeed(String url, FeedCallback callback);
 }

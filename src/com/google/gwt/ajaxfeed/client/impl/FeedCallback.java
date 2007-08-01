@@ -19,6 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.jsio.client.JSFunction;
 
 /**
+ * A general-purpose callback interface used by the API bindings.
  * @gwt.exported onLoad
  */
 public abstract class FeedCallback extends JSFunction {

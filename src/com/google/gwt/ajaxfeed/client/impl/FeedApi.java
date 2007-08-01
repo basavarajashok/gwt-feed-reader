@@ -19,7 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.jsio.client.JSFlyweightWrapper;
 
 /**
- * Interface to the feed source.
+ * Interface to the google.feeds.Feed APIs.  Only the JSON-format is supported.
  */
 public interface FeedApi extends JSFlyweightWrapper {
   /**
@@ -31,5 +31,6 @@ public interface FeedApi extends JSFlyweightWrapper {
   
   public void setNumEntries(JavaScriptObject feed, int entries);
 
+  // This method could be implemented if XML-formatted results are desired.
   // public void setResultFormat
 }

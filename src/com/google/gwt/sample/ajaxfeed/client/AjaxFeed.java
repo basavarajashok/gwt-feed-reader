@@ -26,18 +26,19 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
- * Go.
+ * The main entry point for the application.
  */
 public class AjaxFeed implements EntryPoint {
   private final Configuration configuration = new Configuration();
-  
+
   ManifestPanel manifest = new ManifestPanel(configuration);
 
   public void onModuleLoad() {
     Image logo = Images.INSTANCE.logo().createImage();
     logo.addStyleName("logo");
     RootPanel.get().add(logo, 0, 0);
-    
+
+    // Use a WindowCloseListener to save the configuration
     Window.addWindowCloseListener(new WindowCloseListener() {
 
       public void onWindowClosed() {
@@ -50,6 +51,7 @@ public class AjaxFeed implements EntryPoint {
       }
     });
 
+    // Add a HistoryListener to control the application
     History.addHistoryListener(new HistoryListener() {
       /**
        * Prevent repeated loads of the same token.
@@ -68,31 +70,39 @@ public class AjaxFeed implements EntryPoint {
       }
     });
 
+    // Start a timer to automatically save the configuration in case of sudden
+    // exit.
+    (new Timer() {
+      public void run() {
+        configuration.save();
+      }
+    }).scheduleRepeating(1000 * 60 * 5);
+
+    // Set the initial state of the application based on the initial history
+    // token
     String token = History.getToken();
     if (token == null || token.length() == 0) {
       manifest.enter();
     } else {
       processHistoryToken(token);
     }
-    (new Timer() {
-      public void run() {
-        configuration.save();
-      }
-    }).scheduleRepeating(1000 * 60 * 5);
   }
 
+  /**
+   * Change the application's state based on a new history token.
+   */
   private void processHistoryToken(String token) {
     if (token.length() == 0) {
       return;
     }
-    
+
     token = URL.decodeComponent(token);
 
     if ("manifest".equals(token)) {
       manifest.enter();
       return;
     }
-    
+
     if ("configuration".equals(token)) {
       manifest.showConfiguration();
       return;

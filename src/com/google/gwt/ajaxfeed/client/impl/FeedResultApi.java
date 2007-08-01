@@ -19,6 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.jsio.client.JSFlyweightWrapper;
 
 /**
+ * Wraps the result objects from loading the entries in a feed.
  * @gwt.beanProperties
  */
 public interface FeedResultApi extends JSFlyweightWrapper {
@@ -28,5 +29,7 @@ public interface FeedResultApi extends JSFlyweightWrapper {
   public void bind(JavaScriptObject result);
   public ErrorWrapper getError(JavaScriptObject result);
   public JavaScriptObject getFeed(JavaScriptObject result);
-//  public JavaScriptObject getXmlDocument(JavaScriptObject result);
+  
+  // Implement if the XML results are desired.
+  // public JavaScriptObject getXmlDocument(JavaScriptObject result);
 }

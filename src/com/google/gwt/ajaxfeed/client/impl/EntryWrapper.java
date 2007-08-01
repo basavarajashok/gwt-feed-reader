@@ -19,13 +19,20 @@ import com.google.gwt.jsio.client.JSList;
 import com.google.gwt.jsio.client.JSWrapper;
 
 /**
+ * Wraps an individual feed entry/article JSON object.
  * @gwt.beanProperties
  */
 public interface EntryWrapper extends JSWrapper {
   /**
+   * A List of Strings describing the categories into which the article has
+   * been classified.
    * @gwt.typeArgs <java.lang.String>
    */
   public JSList getCategories();
+  
+  /**
+   * HTML markup containing the article's content.
+   */
   public String getContent();
   public String getContentSnippet();
   public String getLink();

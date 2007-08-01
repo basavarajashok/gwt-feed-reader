@@ -26,7 +26,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- *
+ *  A widget that represents a single label.  A label might represent a feed,
+ *  and entry in a feed, or some other named action.
  */
 public class PanelLabel extends HorizontalPanel implements HasText {
   final Command primary;

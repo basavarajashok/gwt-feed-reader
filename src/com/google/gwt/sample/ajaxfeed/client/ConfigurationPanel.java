@@ -32,7 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * TODO.
+ * The panel by which the application is configured.
  */
 public class ConfigurationPanel extends SliderPanel {
   private final Configuration configuration;
@@ -127,12 +127,17 @@ public class ConfigurationPanel extends SliderPanel {
       }));
     }
 
+    // Add all of the feeds to the panel.
     for (Iterator i = feeds.iterator(); i.hasNext();) {
       final Configuration.Feed feed = (Configuration.Feed) i.next();
       addFeed(feed);
     }
   }
 
+  /**
+   * Perform the necessary UI updates to display a ned feed configuration
+   * option.
+   */
   protected void addFeed(final Configuration.Feed feed) {
     Label title = new Label(feed.getTitle());
     title.addStyleName("title");
@@ -158,6 +163,9 @@ public class ConfigurationPanel extends SliderPanel {
     return "Configuration";
   }
 
+  /**
+   * Remove a feed's representation from the UI.
+   */
   protected void remove(Configuration.Feed feed) {
     if (Window.confirm("Do you wish to remove the feed?")) {
       configuration.getFeeds().remove(feed);

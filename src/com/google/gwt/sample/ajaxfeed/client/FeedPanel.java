@@ -36,10 +36,14 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * TODO.
- * 
+ * Display all of the entries in a Feed so that the user may select one to view.
  */
 public class FeedPanel extends SliderPanel {
+  /**
+   * This class serves as a synchronization point for downloading the contents
+   * of a feed.  If it contains any elements and there is no currently-loading
+   * feed, the first feed in the list will be loaded every 500ms.
+   */
   private static class LoaderList extends ArrayList {
     Timer t = new Timer() {
       public void run() {
@@ -66,17 +70,22 @@ public class FeedPanel extends SliderPanel {
       return super.add(o);
     }
   }
+  
   private static final FeedResultApi resultApi = (FeedResultApi) GWT.create(FeedResultApi.class);
   private static final FeedApi feedApi = (FeedApi) GWT.create(FeedApi.class);
-  private static final List toLoad = new LoaderList();
-
   private static final JsonFeedApi jsonFeedApi = (JsonFeedApi) GWT.create(JsonFeedApi.class);
-
+  
+  /**
+   * The list of feeds that need to be loaded.
+   */
+  private static final List toLoad = new LoaderList();
+  
   /**
    * Used to prevent more than one FeedPanel from being automatically loaded at
    * a time.
    */
   private static FeedPanel loadingFeed;
+
   private final PanelLabel panelLabel;
   private final Configuration.Feed feed;
   private boolean loadStarted = false;
@@ -115,6 +124,9 @@ public class FeedPanel extends SliderPanel {
     return loadStarted;
   }
 
+  /**
+   * Load a single feed.
+   */
   public void loadFeed() {
     if (loadStarted) {
       return;
@@ -170,9 +182,8 @@ public class FeedPanel extends SliderPanel {
       return;
     }
 
-    /*
-     * This resets the label's unread counter.
-     */
+    // This resets the label's unread counter.  We want to do this in the
+    // background.
     IncrementalCommand labelSetup = new IncrementalCommand() {
       int newEntries = 0;
       Iterator i = entries.iterator();
@@ -186,7 +197,9 @@ public class FeedPanel extends SliderPanel {
 
         if (i.hasNext()) {
           return true;
+          
         } else {
+          // No more entries
           if (newEntries > 0) {
             getLabel().addStyleName("unseen");
             getLabel().setText(feed.getTitle() + " (" + newEntries + ")");
@@ -200,6 +213,7 @@ public class FeedPanel extends SliderPanel {
         }
       }
     };
+    
     DeferredCommand.addCommand(labelSetup);
     if (isAttached()) {
       refresh();

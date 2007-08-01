@@ -21,6 +21,7 @@ import com.google.gwt.user.client.Window;
 
 import java.util.Iterator;
 import java.util.List;
+
 /**
  * Shows details about an entry.
  */
@@ -28,15 +29,16 @@ public class DetailPanel extends SliderPanel {
 
   public DetailPanel(final EntryWrapper entry, SliderPanel parent) {
     super("Details", parent);
-    
+
     add(new PanelLabel(entry.getTitle()));
     add(new PanelLabel(entry.getPublishedDate()));
     add(new PanelLabel("Open article", new Command() {
       public void execute() {
-       Window.open(entry.getLink(), "_blank", null);
+        Window.open(entry.getLink(), "_blank", null);
       }
     }));
-    
+
+    // Sometimes entries have server-provided categories.  Display them as well.
     List categories = entry.getCategories();
     if (categories.size() > 0) {
       StringBuffer sb = new StringBuffer();
@@ -47,7 +49,7 @@ public class DetailPanel extends SliderPanel {
       add(new PanelLabel(sb.toString()));
     }
   }
-  
+
   protected String getShortTitle() {
     return "Details";
   }
