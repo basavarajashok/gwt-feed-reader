@@ -23,8 +23,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * TODO.
- *
+ * Displays a single entry in a feed.
  */
 public class EntryPanel extends SliderPanel {
   final EntryWrapper entry;

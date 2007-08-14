@@ -23,7 +23,7 @@ import com.google.gwt.jsio.client.JSFlyweightWrapper;
  */
 public interface FeedApi extends JSFlyweightWrapper {
   /**
-   * @gwt.constructor $wnd.google.feeds.Feed
+   * @gwt.constructor $wnd.google_feed.feeds.Feed
    */
   JavaScriptObject construct(String feedUrl);
   
