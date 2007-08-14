@@ -21,13 +21,15 @@ import com.google.gwt.jsio.client.JSWrapper;
 /**
  * Encapsulates "global" functions in the Ajax Feed API.
  * 
- * @gwt.global $wnd.google.feeds
+ * @gwt.global $wnd.google_feed.feeds
  */
 public abstract class Globals implements JSWrapper {
   public static final Globals API = (Globals) GWT.create(Globals.class);
 
   /**
-   * Used to conduct a search for feeds with articles relevant to the provided query.
+   * Used to conduct a search for feeds with articles relevant to the provided
+   * query.
+   * 
    * @param query the search query
    * @param callback a callback to be invoked when a response is available
    */
@@ -35,6 +37,7 @@ public abstract class Globals implements JSWrapper {
 
   /**
    * Used to canonicalize and verify the existence of a feed's URL.
+   * 
    * @param url the url to verify
    * @param callback a callback to be invoked when a response is available
    */

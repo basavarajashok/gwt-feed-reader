@@ -15,8 +15,11 @@
  */
 package com.google.gwt.sample.ajaxfeed.client;
 
+import com.google.gwt.ajaxfeed.client.impl.Loader;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Timer;
@@ -29,14 +32,32 @@ import com.google.gwt.user.client.ui.RootPanel;
  * The main entry point for the application.
  */
 public class AjaxFeed implements EntryPoint {
-  private final Configuration configuration = new Configuration();
-
-  ManifestPanel manifest = new ManifestPanel(configuration);
+  private Configuration configuration;
+  private ManifestPanel manifest;
 
   public void onModuleLoad() {
-    Image logo = Images.INSTANCE.logo().createImage();
-    logo.addStyleName("logo");
-    RootPanel.get().add(logo, 0, 0);
+    Loader.init(getApiFeedKey(), new Command() {
+      public void execute() {
+        onAjaxFeedLoad();
+      }
+    });
+
+    DeferredCommand.addCommand(new Command() {
+      public void execute() {
+        Image logo = Images.INSTANCE.logo().createImage();
+        logo.addStyleName("logo");
+        RootPanel.get().add(logo, 0, 0);
+      }
+    });
+  }
+
+  private native String getApiFeedKey() /*-{
+   return $wnd.AjaxFeedApiKey || null;
+   }-*/;
+
+  private void onAjaxFeedLoad() {
+    configuration = new Configuration();
+    manifest = new ManifestPanel(configuration);
 
     // Use a WindowCloseListener to save the configuration
     Window.addWindowCloseListener(new WindowCloseListener() {
@@ -50,6 +71,14 @@ public class AjaxFeed implements EntryPoint {
         return null;
       }
     });
+
+    // Start a timer to automatically save the configuration in case of sudden
+    // exit.
+    (new Timer() {
+      public void run() {
+        configuration.save();
+      }
+    }).scheduleRepeating(1000 * 60 * 5);
 
     // Add a HistoryListener to control the application
     History.addHistoryListener(new HistoryListener() {
@@ -69,14 +98,6 @@ public class AjaxFeed implements EntryPoint {
         }
       }
     });
-
-    // Start a timer to automatically save the configuration in case of sudden
-    // exit.
-    (new Timer() {
-      public void run() {
-        configuration.save();
-      }
-    }).scheduleRepeating(1000 * 60 * 5);
 
     // Set the initial state of the application based on the initial history
     // token
