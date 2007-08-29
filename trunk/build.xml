@@ -1,5 +1,5 @@
-<project name="ajaxfeed" default="build" basedir=".">
-	<property name="sample.root" value="ajaxfeed" />
-	<property name="sample.module" value="AjaxFeed" />
+<project name="feedreader" default="build" basedir=".">
+	<property name="sample.root" value="feedreader" />
+	<property name="sample.module" value="GwtFeedReader" />
 	<import file="../common.ant.xml" />
 </project>

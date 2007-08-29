@@ -16,8 +16,8 @@
   <inherits name="com.google.gwt.user.User" />
   <inherits name="com.google.gwt.http.HTTP" />
   <inherits name="com.google.gwt.ajaxfeed.AjaxFeedApi" />
-  <stylesheet src="AjaxFeed.css" />
-  <entry-point class="com.google.gwt.sample.ajaxfeed.client.AjaxFeed" />
+  <stylesheet src="GwtFeedReader.css" />
+  <entry-point class="com.google.gwt.sample.feedreader.client.GwtFeedReader" />
   <!--
     If you want to deploy this application outside of localhost,
     you must obtain a Google AJAX Search API key at:

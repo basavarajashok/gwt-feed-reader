@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.gwt.sample.ajaxfeed.client;
+package com.google.gwt.sample.feedreader.client;
 
 import com.google.gwt.ajaxfeed.client.impl.Loader;
 import com.google.gwt.core.client.EntryPoint;
@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 /**
  * The main entry point for the application.
  */
-public class AjaxFeed implements EntryPoint {
+public class GwtFeedReader implements EntryPoint {
   private Configuration configuration;
   private ManifestPanel manifest;
 
