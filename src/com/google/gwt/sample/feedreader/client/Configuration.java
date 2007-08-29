@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.gwt.sample.ajaxfeed.client;
+package com.google.gwt.sample.feedreader.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.jsio.client.JSList;
@@ -63,7 +63,7 @@ public class Configuration {
    */
   abstract static class Container implements JSWrapper {
     /**
-     * @gwt.typeArgs <com.google.gwt.sample.ajaxfeed.client.Configuration.Feed>
+     * @gwt.typeArgs <com.google.gwt.sample.feedreader.client.Configuration.Feed>
      * @return A live List of Feed objects
      */
     public abstract JSList getFeeds();

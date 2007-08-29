@@ -7,7 +7,7 @@
   window.AjaxFeedApiKey = null;
 </script>
 <script language="javascript"
-  src="com.google.gwt.sample.ajaxfeed.AjaxFeed.nocache.js"
+  src="com.google.gwt.sample.feedreader.GwtFeedReader.nocache.js"
   type="text/javascript" ></script>
 </head>
 <body bgcolor="white">
