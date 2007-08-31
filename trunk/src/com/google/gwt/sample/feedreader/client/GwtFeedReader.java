@@ -36,17 +36,22 @@ public class GwtFeedReader implements EntryPoint {
   private ManifestPanel manifest;
 
   public void onModuleLoad() {
+    // The first thing that we want to do is to get the Ajax Feed API
+    // to download and initialize. All of the other initialization should
+    // be deferred until the iframe kicks off
     Loader.init(getApiFeedKey(), new Command() {
       public void execute() {
         onAjaxFeedLoad();
       }
     });
 
+    // Make sure the Loader's modifications to the DOM have taken effect before
+    // we do anything else.
+    DeferredCommand.addPause();
+
     DeferredCommand.addCommand(new Command() {
       public void execute() {
-        Image logo = Images.INSTANCE.logo().createImage();
-        logo.addStyleName("logo");
-        RootPanel.get().add(logo, 0, 0);
+        initialize();
       }
     });
   }
@@ -55,9 +60,16 @@ public class GwtFeedReader implements EntryPoint {
    return $wnd.AjaxFeedApiKey || null;
    }-*/;
 
-  private void onAjaxFeedLoad() {
+  /**
+   * Initialize the global state of the application.
+   */
+  private void initialize() {
+    // This function should only work once.
+    if (configuration != null) {
+      return;
+    }
+
     configuration = new Configuration();
-    manifest = new ManifestPanel(configuration);
 
     // Use a WindowCloseListener to save the configuration
     Window.addWindowCloseListener(new WindowCloseListener() {
@@ -80,7 +92,7 @@ public class GwtFeedReader implements EntryPoint {
       }
     }).scheduleRepeating(1000 * 60 * 5);
 
-    // Add a HistoryListener to control the application
+    // Add a HistoryListener to control the application.
     History.addHistoryListener(new HistoryListener() {
       /**
        * Prevent repeated loads of the same token.
@@ -99,10 +111,30 @@ public class GwtFeedReader implements EntryPoint {
       }
     });
 
+    // Add the background logo.  This has a nice side-effect of preloading
+    // the ImageBundle before the main UI is used.
+    Image logo = Images.INSTANCE.logo().createImage();
+    logo.addStyleName("logo");
+    RootPanel.get().add(logo, 0, 0);
+  }
+
+  /**
+   * Executed after the Ajax Feed API has been initialized.
+   */
+  private void onAjaxFeedLoad() {
+    // Call the initialization function for completeness; It's highly unlikely
+    // that the feed api would have initialized before the DeferredCommand has
+    // executed.
+    initialize();
+
+    // Create the root UI element
+    manifest = new ManifestPanel(configuration);
+
     // Set the initial state of the application based on the initial history
     // token
     String token = History.getToken();
     if (token == null || token.length() == 0) {
+      // If there's no token, just show the main UI form
       manifest.enter();
     } else {
       processHistoryToken(token);
@@ -129,10 +161,14 @@ public class GwtFeedReader implements EntryPoint {
       return;
     }
 
+    // See if the token represents a new feed URL.  If a new URL was added
+    // to the configuration, tell the manifest panel it should redraw itself
+    // the next time it's shown.
     if (configuration.importFeeds(token)) {
       manifest.setDirty();
     }
-
+    
+    // Find the URL and display it
     Configuration.Feed feed = configuration.findFeed(token);
     if (feed != null) {
       manifest.showFeed(feed);

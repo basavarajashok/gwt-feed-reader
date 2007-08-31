@@ -34,7 +34,7 @@ public class AboutPanel extends SliderPanel {
     hp.add(logo);
     hp.setCellWidth(logo, logo.getWidth() + "px");
 
-    hp.add(new HTML("AjaxFeed<br/>"
+    hp.add(new HTML("GWT Feed Reader<br/>"
         + "An RSS reader using the Google AJAX Feed API "
         + "and the Google Web Toolkit"));
     add(new PanelLabel(hp, null));

@@ -42,7 +42,7 @@ public class FeedPanel extends SliderPanel {
   /**
    * This class serves as a synchronization point for downloading the contents
    * of a feed.  If it contains any elements and there is no currently-loading
-   * feed, the first feed in the list will be loaded every 500ms.
+   * feed, the first feed in the list will be loaded every 100ms.
    */
   private static class LoaderList extends ArrayList {
     Timer t = new Timer() {
@@ -66,7 +66,7 @@ public class FeedPanel extends SliderPanel {
     };
 
     public boolean add(Object o) {
-      t.scheduleRepeating(500);
+      t.scheduleRepeating(100);
       return super.add(o);
     }
   }
@@ -179,6 +179,8 @@ public class FeedPanel extends SliderPanel {
 
     // No more UI setup to do
     if (numEntries == 0) {
+      getLabel().setText(
+          feed.getTitle() + " (No entries)");
       return;
     }
 

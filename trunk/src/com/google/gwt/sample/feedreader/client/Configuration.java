@@ -92,7 +92,7 @@ public class Configuration {
       "http://googlewebtoolkit.blogspot.com/atom.xml",
       "http://thinkgeek.com/thinkgeek.rss", "http://ajaxian.com/index.xml",};
 
-  private static final String COOKIE_NAME = "AjaxFeed";
+  private static final String COOKIE_NAME = "GwtFeedReader";
 
   /**
    * The one instance of the JSON configuration container.

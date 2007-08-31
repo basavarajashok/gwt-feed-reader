@@ -131,7 +131,7 @@ public final class Loader {
    doc.write('google.load("feeds", "1");');
    doc.write('window.parent.AjaxFeedLoad(google);');
    doc.write('</script>');
-   doc.write('</head><body>Empty</body></html>');
+   doc.write('</head><body></body></html>');
    }-*/;
 
   private Loader() {
