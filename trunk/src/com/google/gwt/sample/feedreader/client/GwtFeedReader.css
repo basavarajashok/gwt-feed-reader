@@ -1,6 +1,5 @@
 .button {
     width: auto;
-    -webkit-border-image: url(iPhoneButton.png) 0 5 0 5;
     -webkit-border-radius: 0;
     border-width: 0 5px 0 5px;
     padding: 0;
@@ -15,12 +14,10 @@
 }
 
 .backButton {
-    -webkit-border-image: url(iPhoneBackButton.png) 0 8 0 14;
     border-width: 0 8px 0 14px;
 }
 
 .goButton {
-    -webkit-border-image: url(iPhoneGoButton.png) 0 5 0 5;
     border-width: 0 5px;
 }
 
@@ -34,7 +31,6 @@
   text-align: center;
   text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
   color: #FFFFFF;
-  background: url("iPhoneToolbar.png") #6d84a2 repeat-x;
   border-bottom: 1px solid #2d3642;
 }
 
@@ -44,7 +40,7 @@
   text-align: center;
   text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
   color: #FFFFFF;
-  background: #6d84a2 repeat-x;
+  background: #6d84a2;
   border-top: 1px solid #2d3642;
 }
 
@@ -98,7 +94,7 @@
 
 body {
   font-family: Helvetica serif;
-  background: url("pinstripes.png") silver;
+  bacground: silver;
 }
 
 img {
