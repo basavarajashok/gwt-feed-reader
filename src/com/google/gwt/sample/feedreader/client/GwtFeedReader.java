@@ -19,7 +19,9 @@ import com.google.gwt.ajaxfeed.client.impl.Loader;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Timer;
@@ -56,8 +58,21 @@ public class GwtFeedReader implements EntryPoint {
     });
   }
 
+  private native Element createTextNode(String data) /*-{
+   return $doc.createTextNode(data);
+   }-*/;
+
   private native String getApiFeedKey() /*-{
    return $wnd.AjaxFeedApiKey || null;
+   }-*/;
+
+  /**
+   * Append an element to the documents HEAD element. This should be in DOM.
+   * 
+   * @param elt the Element to append
+   */
+  private native Element getDocumentHead() /*-{
+   return $doc.getElementsByTagName("head")[0];
    }-*/;
 
   /**
@@ -68,6 +83,17 @@ public class GwtFeedReader implements EntryPoint {
     if (configuration != null) {
       return;
     }
+
+    // Add the CSS to the document
+    Element styleLink = DOM.createElement("link");
+    DOM.setElementProperty(styleLink, "href", Resources.INSTANCE.css());
+    DOM.setElementProperty(styleLink, "rel", "stylesheet");
+    DOM.appendChild(getDocumentHead(), styleLink);
+
+    // Touch up body, rather than doing dynamic style injection
+    DOM.setStyleAttribute(RootPanel.getBodyElement(), "background", "url('"
+        + Resources.INSTANCE.background() + "') silver repeat");
+
 
     configuration = new Configuration();
 
@@ -111,7 +137,7 @@ public class GwtFeedReader implements EntryPoint {
       }
     });
 
-    // Add the background logo.  This has a nice side-effect of preloading
+    // Add the background logo. This has a nice side-effect of preloading
     // the ImageBundle before the main UI is used.
     Image logo = Images.INSTANCE.logo().createImage();
     logo.addStyleName("logo");
@@ -161,13 +187,13 @@ public class GwtFeedReader implements EntryPoint {
       return;
     }
 
-    // See if the token represents a new feed URL.  If a new URL was added
+    // See if the token represents a new feed URL. If a new URL was added
     // to the configuration, tell the manifest panel it should redraw itself
     // the next time it's shown.
     if (configuration.importFeeds(token)) {
       manifest.setDirty();
     }
-    
+
     // Find the URL and display it
     Configuration.Feed feed = configuration.findFeed(token);
     if (feed != null) {

@@ -12,16 +12,25 @@
 <!-- implied. License for the specific language governing permissions and   -->
 <!-- limitations under the License.                                         -->
 
+<!-- CacheBundle supports renaming files with strong names at compile time  -->
 <module>
-  <inherits name="com.google.gwt.user.User" />
-  <inherits name="com.google.gwt.http.HTTP" />
-  <inherits name="com.google.gwt.ajaxfeed.AjaxFeedApi" />
-  <inherits name="com.google.gwt.cachebundle.CacheBundle" />
-  <entry-point class="com.google.gwt.sample.feedreader.client.GwtFeedReader" />
-  <!--
-    If you want to deploy this application outside of localhost,
-    you must obtain a Google AJAX Search API key at:
-    http://code.google.com/apis/ajaxsearch/signup.html
-    Replace the src attribute below with a URL that contains your key.
-  -->
+  <inherits name="com.google.gwt.core.Core" />
+  <generate-with
+    class="com.google.gwt.cachebundle.rebind.CacheBundleGenerator">
+    <when-type-assignable class="com.google.gwt.cachebundle.client.CacheBundle" />
+  </generate-with>
+
+  <generate-with
+    class="com.google.gwt.cachebundle.rebind.InlineCacheBundleGenerator">
+    <all>
+      <when-type-assignable
+        class="com.google.gwt.cachebundle.client.CacheBundle" />
+      <any>
+        <when-property-is name="user.agent" value="safari" />
+        <when-property-is name="user.agent" value="opera" />
+        <when-property-is name="user.agent" value="gecko" />
+        <when-property-is name="user.agent" value="gecko1_8" />
+      </any>
+    </all>
+  </generate-with>
 </module>

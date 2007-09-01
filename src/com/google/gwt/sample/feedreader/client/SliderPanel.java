@@ -16,6 +16,7 @@
 package com.google.gwt.sample.feedreader.client;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
@@ -68,11 +69,18 @@ public abstract class SliderPanel extends Composite implements HasHTML {
 
     header.setVerticalAlignment(HorizontalPanel.ALIGN_TOP);
     header.addStyleName("header");
+    // Dynamic style injection not yet working
+    DOM.setStyleAttribute(header.getElement(), "background", "url('"
+        + Resources.INSTANCE.toolbar() + "') #6d84a2 repeat-x");
+
     if (parent != null) {
       Label l = new Label(parent.getShortTitle());
       l.addClickListener(parentClickListener);
       l.addStyleName("button");
       l.addStyleName("backButton");
+      // Remove once dynamic style injection working
+      DOM.setStyleAttribute(l.getElement(), "-webkit-border-image", "url('"
+          + Resources.INSTANCE.backButton() + "') 0 8 0 14");
       header.add(l);
     }
 
@@ -93,6 +101,8 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     footer.setCellWidth(statusLabel, "100%");
 
     permalink.setVisible(false);
+    permalink
+        .setWidth(Images.INSTANCE.popout().createImage().getWidth() + "px");
     footer.add(permalink);
 
     vp.add(footer);
@@ -131,7 +141,9 @@ public abstract class SliderPanel extends Composite implements HasHTML {
   }
 
   /**
-   * Set the command to be executed by a right-justified button in the title bar.
+   * Set the command to be executed by a right-justified button in the title
+   * bar.
+   * 
    * @param label the label for the button
    * @param title the title or alt-text for the button
    * @param command the Command to execute when the button is pressed.
@@ -140,6 +152,9 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     editCommand = command;
     Label l = new Label(label);
     l.addStyleName("button");
+    // Remove once dynamic style injection working
+    DOM.setStyleAttribute(l.getElement(), "-webkit-border-image", "url('"
+        + Resources.INSTANCE.button() + "') 0 5 0 5");
     l.setTitle(title);
     l.addClickListener(new ClickListener() {
       public void onClick(Widget w) {
@@ -160,6 +175,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
 
   /**
    * Add a permalink to the bottom of the panel.
+   * 
    * @param token the history token to associate with the link
    */
   public void setPermalink(String token) {
@@ -174,6 +190,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
 
   /**
    * Set a status message at the bottom of the panel.
+   * 
    * @param status the new status message
    */
   public void setStatus(String status) {

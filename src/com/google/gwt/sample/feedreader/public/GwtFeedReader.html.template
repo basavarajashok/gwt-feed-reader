@@ -12,7 +12,7 @@
 </head>
 <body bgcolor="white">
 <div id="loading">Loading...</div>
-<iframe src="javascript:''" id="__gwt_historyFrame"></iframe>
+<iframe src="javascript:''" id="__gwt_historyFrame" style="position:absolute; width:0; height:0;"></iframe>
 </body>
 </html>
 
