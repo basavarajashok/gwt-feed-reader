@@ -17,7 +17,7 @@ package com.google.gwt.cachebundle.client;
 
 /**
  * The use of this interface is similar to that of ImageBundle. Declare
- * functions that return Strings, which are annotated with
+ * no-argument functions that return Strings, which are annotated with
  * <code>gwt.resource</code> annotations specifying the classpath location of
  * the resource to include in the output. At runtime, the functions will return
  * a URL that can be used to access the data in the original resource.
