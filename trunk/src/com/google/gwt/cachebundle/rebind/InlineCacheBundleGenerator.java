@@ -27,20 +27,19 @@ import java.net.URL;
  * This is a refinement that will use data urls for browsers that support them.
  * Only files whose size are smaller than MAX_INLINE_SIZE will be inlined.
  * Larger files will use the standard CacheBundle behavior.
+ * 
+ * @see "RFC 2397"
  */
 public class InlineCacheBundleGenerator extends CacheBundleGenerator {
   /**
    * The largest file size that will be inlined. Note that this value is taken
    * before any encodings are applied.
    */
-  private static final int MAX_INLINE_SIZE = 8 * 1024;
+  // The JLS specifies a maximum size for any string to be 2^16 characters, so
+  // we'll leave some padding.  Assuming a Base64 encoding, it is true that
+  // (2 ^ 15) * 4/3 < 2 ^ 16, so we can safely inline files up to 32k.
+  private static final int MAX_INLINE_SIZE = 2 << 15;
 
-  /**
-   * Add a CacheBundle-referenced file to the module's output. The extension of
-   * the resource will be preserved to ensure mime-types are correct.
-   * 
-   * @return The name of the resource in the module's output.
-   */
   protected String addToOutput(TreeLogger logger, GeneratorContext context,
       URL resource) throws UnableToCompleteException {
     byte[] bytes = Util.readURLAsBytes(resource);
@@ -50,8 +49,11 @@ public class InlineCacheBundleGenerator extends CacheBundleGenerator {
       sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
       try {
         logger.log(TreeLogger.DEBUG, "Inlining " + resource.getFile(), null);
-        return "data:" + resource.openConnection().getContentType()
-            + ";base64," + enc.encode(bytes).replaceAll("\\s+", "");
+        
+        // Sun's encoder line-wraps the Base64 output, so we apply the
+        // replaceAll to make it one long string literal.
+        return "\"data:" + resource.openConnection().getContentType()
+            + ";base64," + enc.encode(bytes).replaceAll("\\s+", "") + "\"";
       } catch (IOException e) {
         logger.log(TreeLogger.ERROR, "Unable to open resource "
             + resource.toExternalForm(), e);
@@ -63,6 +65,6 @@ public class InlineCacheBundleGenerator extends CacheBundleGenerator {
   }
 
   protected String generateSimpleSourceName(String sourceType) {
-    return "__" + sourceType.replaceAll("\\.", "__") + "InlineImpl";
+    return sourceType.replaceAll("\\.", "_") + "_inlineBundle";
   }
 }

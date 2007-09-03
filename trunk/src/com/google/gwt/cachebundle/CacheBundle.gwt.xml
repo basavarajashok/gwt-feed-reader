@@ -14,17 +14,39 @@
 
 <!-- CacheBundle supports renaming files with strong names at compile time  -->
 <module>
+  <!-- Pull in the necessary base support, including user.agent detection -->
   <inherits name="com.google.gwt.core.Core" />
+
+  <!--  This acts as a switch to disable the use of data: URLs -->
+  <define-property name="CacheBundle.enableInlining" values="true,false" />
+  <set-property name="CacheBundle.enableInlining" value="true" />
+
+  <!-- This can be used to disable the use of strongly-named files -->
+  <define-property name="CacheBundle.enableRenaming" values="true,false" />
+  <set-property name="CacheBundle.enableRenaming" value="true" />
+
+  <!--  Specify the default behavior -->
   <generate-with
     class="com.google.gwt.cachebundle.rebind.CacheBundleGenerator">
+
+    <!-- We have to specify on which types to execute the Generator -->
     <when-type-assignable class="com.google.gwt.cachebundle.client.CacheBundle" />
   </generate-with>
 
+  <!-- Last-matches wins, so this will selectively override the previous rule -->
   <generate-with
     class="com.google.gwt.cachebundle.rebind.InlineCacheBundleGenerator">
+
+    <!-- We have a number of conditions that must be satisfied -->
     <all>
+      <!-- Is inlining enabled? -->
+      <when-property-is name="CacheBundle.enableInlining" value="true" />
+
+      <!-- Again, it's necessary to specify which types the generator runs on -->
       <when-type-assignable
         class="com.google.gwt.cachebundle.client.CacheBundle" />
+
+      <!-- Only some browsers support RFC 2397 data: URLs -->
       <any>
         <when-property-is name="user.agent" value="safari" />
         <when-property-is name="user.agent" value="opera" />

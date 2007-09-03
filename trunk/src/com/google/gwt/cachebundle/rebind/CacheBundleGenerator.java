@@ -15,9 +15,11 @@
  */
 package com.google.gwt.cachebundle.rebind;
 
-import com.google.gwt.cachebundle.client.CacheBundle;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
+import com.google.gwt.core.ext.PropertyOracle;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -38,6 +40,16 @@ import java.net.URL;
  * CacheBundle mappings.
  */
 public class CacheBundleGenerator extends Generator {
+  /**
+   * The name of a deferred binding property that determines whether or not this
+   * generator will rename the incoming resources to strong file names.
+   */
+  private static final String ENABLE_RENAMING = "CacheBundle.enableRenaming";
+
+  /**
+   * The metadata tag name that specifies the classpath location of the target
+   * resource.
+   */
   private static final String METADATA_TAG = "gwt.resource";
 
   public String generate(TreeLogger logger, GeneratorContext context,
@@ -65,7 +77,8 @@ public class CacheBundleGenerator extends Generator {
         new ClassSourceFileComposerFactory(sourceType.getPackage().getName(),
             generatedSimpleSourceName);
 
-    f.addImport(CacheBundle.class.getName());
+    // The generated class needs to be able to determine the module base URL
+    f.addImport(GWT.class.getName());
 
     // Determine the interface to implement
     if (sourceType.isInterface() != null) {
@@ -74,8 +87,8 @@ public class CacheBundleGenerator extends Generator {
     } else {
       // The incoming type wasn't a plain interface, we don't support
       // abstract base classes
-      logger.log(TreeLogger.ERROR, "Requested JClassType is not an interface.",
-          null);
+      logger.log(TreeLogger.ERROR, sourceType.getQualifiedSourceName()
+          + " is not an interface.", null);
       throw new UnableToCompleteException();
     }
 
@@ -95,14 +108,23 @@ public class CacheBundleGenerator extends Generator {
       for (int i = 0; i < methods.length; i++) {
         JMethod m = methods[i];
 
+        // The local URL by which the generator can access the file's content
+        URL resourceUrl = getResourceUrlFromMetaData(logger, m);
+
+        // Just for convenience when examining the generated file
+        sw.println("// " + resourceUrl.toExternalForm());
+
+        // Strip off all but the access modifiers
         sw.print(m.getReadableDeclaration(false, true, true, true, true));
-        sw.println("{");
+        sw.println(" {");
         sw.indent();
 
-        URL resourceUrl = getResourceUrlFromMetaData(logger, m);
-        String resourceName = addToOutput(logger, context, resourceUrl);
+        // The expression to return the user.
+        String expression = addToOutput(logger, context, resourceUrl);
 
-        sw.println("return \"" + resourceName + "\";");
+        // Return the value. Simple expressions will generally be inlined
+        // as part of the compiler's optimization passes
+        sw.println("return " + expression + ";");
 
         sw.outdent();
         sw.println("}");
@@ -120,52 +142,86 @@ public class CacheBundleGenerator extends Generator {
    * Add a CacheBundle-referenced file to the module's output. The extension of
    * the resource will be preserved to ensure mime-types are correct.
    * 
-   * @return The name of the resource in the module's output.
+   * @return A Java expression that will give the final URL of the resource
    */
   protected String addToOutput(TreeLogger logger, GeneratorContext context,
       URL resource) throws UnableToCompleteException {
     byte[] bytes = Util.readURLAsBytes(resource);
 
-    String strongName = Util.computeStrongName(bytes);
+    PropertyOracle propertyOracle = context.getPropertyOracle();
+    String enableRenaming = null;
+    try {
+      enableRenaming = propertyOracle.getPropertyValue(logger, ENABLE_RENAMING);
+    } catch (BadPropertyValueException e) {
+      logger.log(TreeLogger.ERROR, "Bad value for " + ENABLE_RENAMING, e);
+      throw new UnableToCompleteException();
+    }
 
     String fileName = resource.getPath();
-    String extension = "";
-    int lastIdx = fileName.lastIndexOf('.');
-    if (lastIdx != -1) {
-      extension = "." + fileName.substring(lastIdx + 1);
+    String outputName;
+
+    if (Boolean.parseBoolean(enableRenaming)) {
+      String strongName = Util.computeStrongName(bytes);
+
+      // Determine the extension of the original file
+      String extension;
+      int lastIdx = fileName.lastIndexOf('.');
+      if (lastIdx != -1) {
+        extension = fileName.substring(lastIdx + 1);
+      } else {
+        extension = "noext";
+      }
+
+      // The name will be MD5.cache.ext
+      outputName = strongName + ".cache." + extension;
+
+    } else {
+      outputName = fileName.substring(fileName.lastIndexOf('/') + 1);
     }
-    String outputName = strongName + ".cache" + extension;
+
     // Ask the context for an OutputStream into the named resource
     OutputStream out = context.tryCreateResource(logger, outputName);
 
     // This would be null if the resource has already been created in the output
-    // (because two or more files had identical content).
+    // (because two or more resources had identical content).
     if (out != null) {
       try {
         InputStream in = resource.openStream();
         Util.copy(logger, in, out);
-        context.commitResource(logger, out);
+        in.close();
+
       } catch (IOException e) {
-        logger.log(TreeLogger.ERROR, "Unable to open resource "
-            + resource.toExternalForm(), e);
+        logger.log(TreeLogger.ERROR, "Unable to copy resource "
+            + resource.toExternalForm() + " to output name " + outputName, e);
         throw new UnableToCompleteException();
       }
+
+      // If there's an error, this won't be called and there will be nothing
+      // created in the output directory.
+      context.commitResource(logger, out);
+
+      logger.log(TreeLogger.DEBUG, "Copied " + resource.toExternalForm()
+          + " to " + outputName, null);
     }
 
-    logger.log(TreeLogger.DEBUG, "Copied " + resource.toExternalForm() + " to "
-        + outputName, null);
-    return outputName;
+    // Adding the module base URL ensures that the resources will be accessible
+    // even in a cross-site inclusion scenario.
+    return "GWT.getModuleBaseURL() + \"" + outputName + "\"";
   }
 
   /**
-   * Given a user-define type name, determine the type name for the generated class.
+   * Given a user-defined type name, determine the type name for the generated
+   * class.
    */
   protected String generateSimpleSourceName(String sourceType) {
-    return "__" + sourceType.replaceAll("\\.", "__") + "Impl";
+    return sourceType.replaceAll("\\.", "_") + "_externalBundle";
   }
 
-  // Assume this is only called for valid methods. This is a cut-down version
-  // of the logic found in ImageBundleBuilder
+  /**
+   * Determine the resource to include for a given method declaration. Assume
+   * this is only called for valid methods. This is a cut-down version of the
+   * logic found in ImageBundleBuilder
+   */
   private URL getResourceUrlFromMetaData(TreeLogger logger, JMethod method)
       throws UnableToCompleteException {
 
@@ -177,7 +233,7 @@ public class CacheBundleGenerator extends Generator {
       throw new UnableToCompleteException();
     }
 
-    // Metadata is available, so get the resource url from the metadata
+    // Metadata is available, so get the resource name from the metadata
     int lastTagIndex = md.length - 1;
     int lastValueIndex = md[lastTagIndex].length - 1;
     String resourceNameFromMetaData = md[lastTagIndex][lastValueIndex];
@@ -201,6 +257,11 @@ public class CacheBundleGenerator extends Generator {
           + "Is the name specified as Class.getResource() would expect?", null);
       throw new UnableToCompleteException();
     }
+
+    // In the future, it would be desirable to be able to automatically
+    // determine the resource name to use from the method declaration. We're
+    // currently limited by the inability to list the contents of the classpath
+    // and not having a set number of file extensions to empirically test.
 
     return resourceURL;
   }
