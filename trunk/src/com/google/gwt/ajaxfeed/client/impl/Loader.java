@@ -89,49 +89,89 @@ public final class Loader {
     t.scheduleRepeating(10);
   }
 
+  /**
+   * Allow a Java exception to be thrown by a JSNI function.
+   */
   static void throwRuntimeException(String msg) {
     throw new RuntimeException(msg);
   }
 
+  /**
+   * Because we're using document.write() to construct the sandbox iframe, we
+   * must call document.close() or some browsers will contine to display the
+   * spinner. It's also possible that a browser that does not use progressive
+   * rendering would not evaluate the contents of the document until it's
+   * closed.
+   */
   private static native void closeDocument(Element doc) /*-{
-    doc.close();
-  }-*/;
+   doc.close();
+   }-*/;
 
+  /**
+   * Extract the document Element from a Frame.
+   */
   private static native Element getDocument(Frame frame) /*-{
-    var elt = frame.@com.google.gwt.user.client.ui.UIObject::getElement()();
-    
-    // FF || IE
-    var doc = elt.contentDocument || elt.contentWindow;
-    // Opera sometimes returns the window
-    if (doc.document) {
-    doc = doc.document;
-    }
-    
-    if (!doc) {
-      @com.google.gwt.ajaxfeed.client.impl.Loader::throwRuntimeException(Ljava/lang/String;)("Unable to obtain sandbox");
-    }
-    
-    return doc;
-  }-*/;
-  
+   var elt = frame.@com.google.gwt.user.client.ui.UIObject::getElement()();
+   
+   // FF || IE
+   var doc = elt.contentDocument || elt.contentWindow;
+   // Opera sometimes returns the window
+   if (doc.document) {
+   doc = doc.document;
+   }
+   
+   if (!doc) {
+   @com.google.gwt.ajaxfeed.client.impl.Loader::throwRuntimeException(Ljava/lang/String;)("Unable to obtain sandbox");
+   }
+   
+   return doc;
+   }-*/;
+
+  private static native void openDocument(Element doc) /*-{
+   doc.open();
+   }-*/;
+
+  /**
+   * Registers a function that will be called from within the sandbox iframe to
+   * indicate that the API download process has started.
+   * 
+   * @see #ajaxFeedLoad(JavaScriptObject)
+   */
   private static native void registerSandboxCallback() /*-{
    $wnd.AjaxFeedLoad = @com.google.gwt.ajaxfeed.client.impl.Loader::ajaxFeedLoad(Lcom/google/gwt/core/client/JavaScriptObject;);
    }-*/;
-  
-  private static native void setupDocument(Element doc, String apiKey) /*-{
-   doc.open();
-   doc.write('<html><head>');
-   doc.write('<script type="text/javascript" src="http://www.google.com/jsapi');
-   if (apiKey) {
-     doc.write('?key=' + apiKey);
-   }
-   
-   doc.write('"></script>');
-   doc.write('<script type="text/javascript">');
-   doc.write('google.load("feeds", "1");');
-   doc.write('window.parent.AjaxFeedLoad(google);');
-   doc.write('</script>');
-   doc.write('</head><body></body></html>');
+
+  private static void setupDocument(Element doc, String apiKey) {
+    openDocument(doc);
+    write(doc, "<html><head>");
+    
+    // Download the common loader and specify the developer's API key
+    write(doc,
+        "<script type=\"text/javascript\" src=\"http://www.google.com/jsapi");
+    if (apiKey != null) {
+      write(doc, "?key=" + apiKey);
+    }
+    write(doc, "\"></script>");
+    
+    // Execute an inline script
+    write(doc, "<script type=\"text/javascript\">");
+    
+    // Tell the common Google loader to go fetch the feeds API
+    write(doc, "google.load('feeds', '1', {'nocss' : true});");
+    
+    // Tell the Loader code we just started the load process
+    write(doc, "window.parent.AjaxFeedLoad(google);");
+    
+    // Close the script and finish out the document's contents
+    write(doc, "</script>");
+    write(doc, "</head><body></body></html>");
+    
+    // We don't close the document here because the jsapi loader also does
+    // some document.write calls
+  }
+
+  private static native void write(Element doc, String data) /*-{
+   doc.write(data);
    }-*/;
 
   private Loader() {
