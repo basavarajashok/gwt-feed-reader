@@ -25,9 +25,9 @@ import java.util.List;
 /**
  * Shows details about an entry.
  */
-public class DetailPanel extends SliderPanel {
+public class DetailPanel extends WallToWallPanel {
 
-  public DetailPanel(final EntryWrapper entry, SliderPanel parent) {
+  public DetailPanel(final EntryWrapper entry, WallToWallPanel parent) {
     super("Details", parent);
 
     add(new PanelLabel(entry.getTitle()));

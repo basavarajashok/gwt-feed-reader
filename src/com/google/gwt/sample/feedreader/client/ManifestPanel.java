@@ -24,7 +24,7 @@ import java.util.Iterator;
 /**
  * The main view; a list of all of the configured feeds.
  */
-public class ManifestPanel extends SliderPanel {
+public class ManifestPanel extends WallToWallPanel {
   private final Configuration configuration;
   private final HashMap/* <Feed, FeedPanel> */feedPanelMap = new HashMap();
   

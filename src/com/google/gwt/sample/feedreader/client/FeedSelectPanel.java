@@ -21,7 +21,6 @@ import com.google.gwt.ajaxfeed.client.impl.FindResultApi;
 import com.google.gwt.ajaxfeed.client.impl.Globals;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
@@ -35,12 +34,12 @@ import java.util.List;
 /**
  * A panel to allow the user to choose feeds from a search result.
  */
-public class FeedSelectPanel extends SliderPanel {
+public class FeedSelectPanel extends WallToWallPanel {
   private static final FindResultApi RESULT_API = (FindResultApi) GWT.create(FindResultApi.class);
 
   public FeedSelectPanel(final ConfigurationPanel parent,
       final Configuration configuration, String query) {
-    super("Select feeds...", parent);
+    super("Select feed...", parent);
 
     FeedCallback fc = new FeedCallback() {
       public void onLoad(final JavaScriptObject jso) {
@@ -80,7 +79,7 @@ public class FeedSelectPanel extends SliderPanel {
 
             add(new PanelLabel(vp, new Command() {
               public void execute() {
-                History.newItem(URL.encodeComponent(entry.getUrl()));
+                History.newItem(entry.getUrl());
               }
             }));
 

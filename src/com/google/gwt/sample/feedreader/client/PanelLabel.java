@@ -50,6 +50,7 @@ public class PanelLabel extends HorizontalPanel implements HasText {
     this.primary = primary;
     this.widget = widget;
 
+    widget.setWidth("100%");
     add(widget);
 
     if (primary != null) {
