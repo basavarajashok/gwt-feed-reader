@@ -52,7 +52,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
   private final FlowPanel contents = new FlowPanel();
   private final HorizontalPanel header = new HorizontalPanel();
   private final PanelLabel panelLabel;
-  private final Label statusLabel = new Label();
+  private final UnsunkLabel statusLabel = new UnsunkLabel();
   private final Hyperlink permalink = new Hyperlink();
 
   private Command editCommand;
@@ -84,7 +84,8 @@ public abstract class SliderPanel extends Composite implements HasHTML {
       header.add(l);
     }
 
-    Label titleLabel = new Label(title);
+    UnsunkLabel titleLabel = new UnsunkLabel(title);
+    titleLabel.addStyleName("titleLabel");
     header.add(titleLabel);
     header.setCellWidth(titleLabel, "100%");
     header.setCellHorizontalAlignment(titleLabel, HorizontalPanel.ALIGN_CENTER);
@@ -94,18 +95,6 @@ public abstract class SliderPanel extends Composite implements HasHTML {
 
     contents.addStyleName("contents");
     vp.add(contents);
-
-    HorizontalPanel footer = new HorizontalPanel();
-    footer.setStyleName("footer");
-    footer.add(statusLabel);
-    footer.setCellWidth(statusLabel, "100%");
-
-    permalink.setVisible(false);
-    permalink
-        .setWidth(Images.INSTANCE.popout().createImage().getWidth() + "px");
-    footer.add(permalink);
-
-    vp.add(footer);
 
     initWidget(vp);
     addStyleName("SliderPanel");
@@ -152,6 +141,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     editCommand = command;
     Label l = new Label(label);
     l.addStyleName("button");
+    l.addStyleName("goButton");
     // Remove once dynamic style injection working
     DOM.setStyleAttribute(l.getElement(), "-webkit-border-image", "url('"
         + Resources.INSTANCE.button() + "') 0 5 0 5");
@@ -182,7 +172,6 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     if (token == null) {
       permalink.setVisible(false);
     } else {
-      permalink.setHTML(Images.INSTANCE.popout().getHTML());
       permalink.setTargetHistoryToken(token);
       permalink.setVisible(true);
     }
@@ -198,8 +187,8 @@ public abstract class SliderPanel extends Composite implements HasHTML {
   }
 
   public void setText(String text) {
-    Label l;
-    hasText = l = new Label(text);
+    UnsunkLabel l;
+    hasText = l = new UnsunkLabel(text);
     hasHtml = null;
 
     contents.clear();
@@ -219,6 +208,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     if (activePanel != null) {
       RootPanel.get().remove(activePanel);
     }
+
     activePanel = SliderPanel.this;
     RootPanel.get().add(SliderPanel.this, 0, 0);
 

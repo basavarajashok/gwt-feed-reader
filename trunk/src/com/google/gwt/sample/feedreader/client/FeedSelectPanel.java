@@ -27,8 +27,6 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import java.util.Iterator;
@@ -68,11 +66,11 @@ public class FeedSelectPanel extends SliderPanel {
               return i.hasNext();
             }
 
-            HTML title = new HTML(entry.getTitle());
+            UnsunkLabel title = new UnsunkLabel(entry.getTitle(), true);
             title.addStyleName("title");
-            HTML snippit = new HTML(entry.getContentSnippet());
+            UnsunkLabel snippit = new UnsunkLabel(entry.getContentSnippet());
             snippit.addStyleName("snippit");
-            Label url = new Label(entry.getUrl());
+            UnsunkLabel url = new UnsunkLabel(entry.getUrl());
             url.addStyleName("snippit");
 
             VerticalPanel vp = new VerticalPanel();

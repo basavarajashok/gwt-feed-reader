@@ -18,10 +18,4 @@
   <inherits name="com.google.gwt.ajaxfeed.AjaxFeedApi" />
   <inherits name="com.google.gwt.cachebundle.CacheBundle" />
   <entry-point class="com.google.gwt.sample.feedreader.client.GwtFeedReader" />
-  <!--
-    If you want to deploy this application outside of localhost,
-    you must obtain a Google AJAX Search API key at:
-    http://code.google.com/apis/ajaxsearch/signup.html
-    Replace the src attribute below with a URL that contains your key.
-  -->
 </module>

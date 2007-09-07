@@ -20,7 +20,9 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
 
 /**
- * A bundle for the images used in the application.
+ * The ImageBundle isn't actually used by the application, we just want to be
+ * able to know the size of the images at compile time to prevent jittery
+ * layout.  The images are actually transferred with the CacheBundle.
  */
 public interface Images extends ImageBundle {
   public static final Images INSTANCE = (Images) GWT.create(Images.class);
@@ -34,9 +36,4 @@ public interface Images extends ImageBundle {
    * @gwt.resource gwtLogo.png
    */
   public AbstractImagePrototype logo();
-  
-  /**
-   * @gwt.resource newwindow.png
-   */
-  public AbstractImagePrototype popout();
 }

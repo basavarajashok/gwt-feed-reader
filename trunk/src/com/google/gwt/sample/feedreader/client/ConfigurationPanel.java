@@ -23,8 +23,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import java.util.HashMap;
@@ -60,55 +58,11 @@ public class ConfigurationPanel extends SliderPanel {
     AboutPanel about = new AboutPanel(this);
     add(about.getLabel());
 
-    // Create the add URL option
-    {
-      Label title = new Label("Add feed URL...");
-      title.addStyleName("title");
-      HTML fastAdd = new HTML(
-          "To quickly add many URLs, send yourself an IM with permalinks "
-              + Images.INSTANCE.popout().getHTML() + " found "
-              + "at the bottom of each feed panel.");
-      fastAdd.addStyleName("snippit");
-
-      VerticalPanel vp = new VerticalPanel();
-      vp.add(title);
-      vp.add(fastAdd);
-
-      add(new PanelLabel(vp, new Command() {
-        public void execute() {
-          final String url = Window.prompt("Feed address", "http://");
-          if (url != null) {
-            FeedCallback fc = new FeedCallback() {
-              public void onLoad(JavaScriptObject jso) {
-                LookupResultApi l = (LookupResultApi) GWT.create(LookupResultApi.class);
-                l.bind(jso);
-
-                ErrorWrapper error = l.getError(jso);
-                if (error != null) {
-                  Window.alert("Unable to add feed.\n" + error.getMessage());
-                  return;
-                }
-
-                Configuration.Feed f = (Configuration.Feed) GWT.create(Configuration.Feed.class);
-                f.setTitle(url);
-                f.setUrl(url);
-                feeds.add(f);
-                parent.setDirty();
-                addFeed(f);
-              }
-            };
-
-            Globals.API.lookupFeed(url, fc);
-          }
-        }
-      }));
-    }
-
     // Create the search option
     {
-      Label title = new Label("Search for feeds...");
+      UnsunkLabel title = new UnsunkLabel("Search for new feeds...");
       title.addStyleName("title");
-      Label info = new Label("Add feeds by searching.");
+      UnsunkLabel info = new UnsunkLabel("Add feeds by searching.");
       info.addStyleName("snippit");
 
       VerticalPanel vp = new VerticalPanel();
@@ -139,9 +93,9 @@ public class ConfigurationPanel extends SliderPanel {
    * option.
    */
   protected void addFeed(final Configuration.Feed feed) {
-    Label title = new Label(feed.getTitle());
+    UnsunkLabel title = new UnsunkLabel("Remove " + feed.getTitle());
     title.addStyleName("title");
-    Label snippit = new Label(feed.getUrl());
+    UnsunkLabel snippit = new UnsunkLabel(feed.getUrl());
     snippit.addStyleName("snippit");
 
     VerticalPanel vp = new VerticalPanel();

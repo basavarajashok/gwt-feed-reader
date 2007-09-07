@@ -48,6 +48,21 @@ public interface Resources extends CacheBundle {
   public String css();
 
   /**
+   * @gwt.resource iPhoneArrow.png
+   */
+  public String enter();
+
+  /**
+   * @gwt.resource gwtLogo.png
+   */
+  public String logo();
+  
+  /**
+   * @gwt.resource spinner.gif
+   */
+  public String spinner();
+  
+  /**
    * @gwt.resource iPhoneToolbar.png
    */
   public String toolbar();
