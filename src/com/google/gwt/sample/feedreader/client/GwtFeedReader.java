@@ -27,7 +27,6 @@ import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -57,10 +56,6 @@ public class GwtFeedReader implements EntryPoint {
       }
     });
   }
-
-  private native Element createTextNode(String data) /*-{
-   return $doc.createTextNode(data);
-   }-*/;
 
   private native String getApiFeedKey() /*-{
    return $wnd.AjaxFeedApiKey || null;
@@ -94,9 +89,10 @@ public class GwtFeedReader implements EntryPoint {
     DOM.setStyleAttribute(RootPanel.getBodyElement(), "background", "url('"
         + Resources.INSTANCE.background() + "') silver repeat");
 
-
     configuration = new Configuration();
-
+    // Create the root UI element
+    manifest = new ManifestPanel(configuration);
+    
     // Use a WindowCloseListener to save the configuration
     Window.addWindowCloseListener(new WindowCloseListener() {
 
@@ -139,7 +135,7 @@ public class GwtFeedReader implements EntryPoint {
 
     // Add the background logo. This has a nice side-effect of preloading
     // the ImageBundle before the main UI is used.
-    Image logo = Images.INSTANCE.logo().createImage();
+    UnsunkImage logo = new UnsunkImage(Resources.INSTANCE.logo());
     logo.addStyleName("logo");
     RootPanel.get().add(logo, 0, 0);
   }
@@ -152,9 +148,6 @@ public class GwtFeedReader implements EntryPoint {
     // that the feed api would have initialized before the DeferredCommand has
     // executed.
     initialize();
-
-    // Create the root UI element
-    manifest = new ManifestPanel(configuration);
 
     // Set the initial state of the application based on the initial history
     // token

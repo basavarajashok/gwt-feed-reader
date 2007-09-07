@@ -42,7 +42,6 @@ public class ManifestPanel extends SliderPanel {
 
     addStyleName("ManifestPanel");
     setStatus("Loading feeds...");
-    refresh();
   }
 
   public void enter() {

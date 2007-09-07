@@ -19,7 +19,6 @@ import com.google.gwt.ajaxfeed.client.impl.EntryWrapper;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -35,10 +34,10 @@ public class EntryPanel extends SliderPanel {
     addStyleName("EntryPanel");
     this.entry = entry;
     
-    Label title = new Label(entry.getTitle());
+    UnsunkLabel title = new UnsunkLabel(entry.getTitle());
     title.addStyleName("title");
     
-    Label snippit = new Label(entry.getContentSnippet());
+    UnsunkLabel snippit = new UnsunkLabel(entry.getContentSnippet());
     snippit.addStyleName("snippit");
     
     VerticalPanel vp = new VerticalPanel();
@@ -64,7 +63,9 @@ public class EntryPanel extends SliderPanel {
     }
     
     if (!contentsSet) {
-      add(new PanelLabel(entry.getContent(), null, true));
+      PanelLabel contents = new PanelLabel(entry.getContent(), null, true);
+      contents.addStyleName("articleContents");
+      add(contents);
       add(new PanelLabel("Open article", new Command() {
         public void execute() {
          Window.open(entry.getLink(), "_blank", null);

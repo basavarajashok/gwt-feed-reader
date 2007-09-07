@@ -1,102 +1,65 @@
-.button {
-    width: auto;
-    -webkit-border-radius: 0;
-    border-width: 0 5px 0 5px;
-    padding: 0;
-    height: 28px;
-    line-height: 28px;
-    font-size: 12px;
-    font-weight: bold;
-    color: #FFFFFF;
-    text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
-    text-decoration: none;
-    background: none;
+* {
+  font-family: Helvetica sans-serif;
+  font-weight: bold;
+  font-size: 17pt;
+}
+
+.SliderPanel {
+  width: 100%;
+  min-height: 416px;
+  background: white;
+  overflow: hidden;
+}
+
+.PanelLabel {
+  width: 100%;
+  padding: 10px;
+  height: 43px;
+  border-bottom: 1px solid rgb(217, 217, 217);
 }
 
 .backButton {
     border-width: 0 8px 0 14px;
 }
-
 .goButton {
     border-width: 0 5px;
 }
 
+.button {
+  font-size: 10pt;
+  font-weight: normal;
+  height: 29px;
+  line-height: 29px;
+  vertical-align: middle;
+}
+
+.articleContents * {
+  font-size: 11pt;
+  font-weight: normal;
+}
+
 .header {
-  margin: 0;
+  height: 44px;
+  color: white;
+  width: 100%;
   padding: 10px;
-  width: 100%;
-  line-height: 20px;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
-  color: #FFFFFF;
-  border-bottom: 1px solid #2d3642;
+  vertical-align: middle;
 }
 
-.footer {
-  width: 100%;
-  font-size: small;
-  text-align: center;
-  text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
-  color: #FFFFFF;
-  background: #6d84a2;
-  border-top: 1px solid #2d3642;
-}
-
-.logo {
-  opacity: 0.4;
-  top: 0.5em !important;
-  left: 0.5em !important;
-}
-
-.PanelLabel {
-  width: 100%;
-  border-bottom: 2px solid #eee;
-  padding: 2ex;
-  cursor: pointer;
-}
-
-.partial {
-  font-weight: lighter;
-}
-
-.SliderPanel {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background: white;
-  width: 100%;
+.last {
+  padding-bottom: 14px !important;
 }
 
 .snippit {
-  font-size: x-small;
-}
-
-.unseen {
-  font-weight: bold !important;
-}
-
-#__gwt_historyFrame {
-  height: 0;
-  width: 0;
-  position: static !important;
-  visibility: hidden !important;
-}
-
-#loading {
-  position: absolute;
-  top: 0.5em;
-  right: 0.5em;
-  z-index: -1;
-  border: thin solid #2d3642;
-  -webkit-border-radius: 0.25ex;
-}
-
-body {
-  font-family: Helvetica serif;
-  bacground: silver;
+  font-size: 11pt;
+  font-weight: normal;
+  padding-left: 4px;
 }
 
 img {
-  max-width: 95% !important;
+  max-width: 95%;
+}
+
+#loading {
+  display: none;
 }

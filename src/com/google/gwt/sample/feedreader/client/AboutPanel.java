@@ -15,9 +15,8 @@
  */
 package com.google.gwt.sample.feedreader.client;
 
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * A simple about panel.
@@ -30,13 +29,16 @@ public class AboutPanel extends SliderPanel {
     HorizontalPanel hp = new HorizontalPanel();
     hp.setVerticalAlignment(HorizontalPanel.ALIGN_TOP);
 
-    Image logo = Images.INSTANCE.logo().createImage();
-    hp.add(logo);
-    hp.setCellWidth(logo, logo.getWidth() + "px");
+    AbstractImagePrototype logo = Images.INSTANCE.logo();
+    UnsunkImage logoLabel = new UnsunkImage(Resources.INSTANCE.logo());
+    hp.add(logoLabel);
+    hp.setCellWidth(logoLabel, logo.createImage().getWidth() + "px");
 
-    hp.add(new HTML("GWT Feed Reader<br/>"
-        + "An RSS reader using the Google AJAX Feed API "
-        + "and the Google Web Toolkit"));
+    hp
+        .add(new UnsunkLabel(
+            "GWT Feed Reader<br/>"
+                + "<span class=\"snippit\">An RSS reader using the Google AJAX Feed API "
+                + "and the Google Web Toolkit</span>", true));
     add(new PanelLabel(hp, null));
   }
 

@@ -41,7 +41,7 @@ import java.util.List;
 public class FeedPanel extends SliderPanel {
   /**
    * This class serves as a synchronization point for downloading the contents
-   * of a feed.  If it contains any elements and there is no currently-loading
+   * of a feed. If it contains any elements and there is no currently-loading
    * feed, the first feed in the list will be loaded every 100ms.
    */
   private static class LoaderList extends ArrayList {
@@ -70,16 +70,18 @@ public class FeedPanel extends SliderPanel {
       return super.add(o);
     }
   }
-  
-  private static final FeedResultApi resultApi = (FeedResultApi) GWT.create(FeedResultApi.class);
+
+  private static final FeedResultApi resultApi =
+      (FeedResultApi) GWT.create(FeedResultApi.class);
   private static final FeedApi feedApi = (FeedApi) GWT.create(FeedApi.class);
-  private static final JsonFeedApi jsonFeedApi = (JsonFeedApi) GWT.create(JsonFeedApi.class);
-  
+  private static final JsonFeedApi jsonFeedApi =
+      (JsonFeedApi) GWT.create(JsonFeedApi.class);
+
   /**
    * The list of feeds that need to be loaded.
    */
   private static final List toLoad = new LoaderList();
-  
+
   /**
    * Used to prevent more than one FeedPanel from being automatically loaded at
    * a time.
@@ -93,12 +95,10 @@ public class FeedPanel extends SliderPanel {
   private List entries;
   private int numEntries = 0;
 
-  private boolean dirty = false;
-
   public FeedPanel(final Configuration.Feed feed, ManifestPanel parent) {
     super(feed.getTitle(), parent);
     this.feed = feed;
-    
+
     panelLabel = new PanelLabel(feed.getTitle(), new Command() {
       public void execute() {
         enter();
@@ -111,7 +111,7 @@ public class FeedPanel extends SliderPanel {
     setText("Loading");
     toLoad.add(this);
   }
-  
+
   public PanelLabel getLabel() {
     return panelLabel;
   }
@@ -135,91 +135,39 @@ public class FeedPanel extends SliderPanel {
     loadStarted = true;
     loadFinished = false;
 
-    getLabel().setText(feed.getTitle() + " (Loading)");
+    getLabel().setEnterImageUrl(Resources.INSTANCE.spinner());
 
     JavaScriptObject feedJso = feedApi.construct(feed.getUrl());
     feedApi.setNumEntries(feedJso, 20);
     feedApi.load(feedJso, new FeedCallback() {
       public void onLoad(JavaScriptObject feedResult) {
-        loadStarted = true;
-        loadFinished = true;
-        setFeedResult(feedResult);
+        // Fix up any missing fields
+        resultApi.bind(feedResult);
+
+        ErrorWrapper errorResponse = resultApi.getError(feedResult);
+        if (errorResponse != null) {
+          getLabel().setText(feed.getTitle() + " (Error)");
+          setText("Unable to load feed (" + errorResponse.getMessage() + ")");
+          return;
+        }
+
+        JavaScriptObject jsonFeed = resultApi.getFeed(feedResult);
+        entries = jsonFeedApi.getEntries(jsonFeed);
+        numEntries = entries.size();
+
+        String title = jsonFeedApi.getTitle(jsonFeed);
+        feed.setTitle(title);
+        getLabel().setText(title);
+
+        // No more UI setup to do
+        if (numEntries == 0) {
+          getLabel().setEnterImageUrl(Resources.INSTANCE.enter());
+          return;
+        }
+
+        redraw();
       }
     });
-  }
-  
-  public void setDirty() {
-    dirty = true;
-  }
-
-  public void setFeedResult(JavaScriptObject feedResult) {
-    // Fix up any missing fields
-    resultApi.bind(feedResult);
-
-    ErrorWrapper errorResponse = resultApi.getError(feedResult);
-    if (errorResponse != null) {
-      getLabel().setText(feed.getTitle() + " (Error)");
-      setText("Unable to load feed (" + errorResponse.getMessage() + ")");
-      return;
-    }
-
-    setResponse(resultApi.getFeed(feedResult));
-  }
-
-  public void setResponse(JavaScriptObject jsonFeed) {
-    dirty = true;
-    entries = jsonFeedApi.getEntries(jsonFeed);
-    numEntries = entries.size();
-
-    feed.setTitle(jsonFeedApi.getTitle(jsonFeed));
-    getLabel().setText(
-        feed.getTitle() + " (Parsing " + numEntries + " entries)");
-
-    final Date lastViewed = new Date(feed.getLastArticle());
-
-    // No more UI setup to do
-    if (numEntries == 0) {
-      getLabel().setText(
-          feed.getTitle() + " (No entries)");
-      return;
-    }
-
-    // This resets the label's unread counter.  We want to do this in the
-    // background.
-    IncrementalCommand labelSetup = new IncrementalCommand() {
-      int newEntries = 0;
-      Iterator i = entries.iterator();
-
-      public boolean execute() {
-        EntryWrapper entry = (EntryWrapper) i.next();
-
-        if ((new Date(entry.getPublishedDate())).after(lastViewed)) {
-          newEntries++;
-        }
-
-        if (i.hasNext()) {
-          return true;
-          
-        } else {
-          // No more entries
-          if (newEntries > 0) {
-            getLabel().addStyleName("unseen");
-            getLabel().setText(feed.getTitle() + " (" + newEntries + ")");
-          } else {
-            getLabel().setText(feed.getTitle());
-          }
-          
-          long loadTime = System.currentTimeMillis();
-          setStatus("Last loaded at " + (new Date(loadTime)).toLocaleString());
-          return false;
-        }
-      }
-    };
-    
-    DeferredCommand.addCommand(labelSetup);
-    if (isAttached()) {
-      refresh();
-    }
   }
 
   protected void enter() {
@@ -228,7 +176,8 @@ public class FeedPanel extends SliderPanel {
     }
     loadFeed();
     super.enter();
-    refresh();
+    feed.setLastArticle(System.currentTimeMillis());
+    getLabel().setText(feed.getTitle());
     History.newItem(feed.getUrl());
   }
 
@@ -236,33 +185,55 @@ public class FeedPanel extends SliderPanel {
     return "Feed";
   }
 
-  private void refresh() {
-    if (!dirty) {
-      return;
-    }
-    dirty = false;
-
+  private void redraw() {
     clear();
-    
+    final Date lastViewed = new Date(feed.getLastArticle());
+
     DeferredCommand.addCommand(new IncrementalCommand() {
       final Iterator i = entries.iterator();
+      int newEntries = 0;
+      PanelLabel lastLabel;
 
       // DOM updates can be kind of slow, so we'll show the user updates as they
       // happen
       public boolean execute() {
         EntryWrapper entry = (EntryWrapper) i.next();
         EntryPanel panel = new EntryPanel(entry, FeedPanel.this);
-        add(panel.getLabel());
-        return i.hasNext();
-      }
-    });
+        lastLabel = panel.getLabel();
+        add(lastLabel);
 
-    // Can do this in the background.
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        getLabel().removeStyleName("unseen");
-        getLabel().setText(feed.getTitle());
-        feed.setLastArticle(System.currentTimeMillis());
+        try {
+          if ((new Date(entry.getPublishedDate())).after(lastViewed)) {
+            newEntries++;
+          }
+        } catch (IllegalArgumentException e) {
+          // Ignore date formats that we can't parse.
+        }
+
+        if (i.hasNext()) {
+          return true;
+
+        } else {
+          // We want to format the last element a little differently
+          lastLabel.addStyleName("last");
+
+          // Show the number of new entries
+          if (newEntries > 0) {
+            getLabel().addStyleName("unseen");
+            getLabel().setText(feed.getTitle() + " (" + newEntries + ")");
+          } else {
+            getLabel().setText(feed.getTitle());
+          }
+
+          // Reset the label's entry icon
+          getLabel().setEnterImageUrl(Resources.INSTANCE.enter());
+
+          long loadTime = System.currentTimeMillis();
+          setStatus("Last loaded at " + (new Date(loadTime)).toLocaleString());
+          loadFinished = true;
+
+          return false;
+        }
       }
     });
   }
