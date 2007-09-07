@@ -34,11 +34,9 @@ public class AboutPanel extends WallToWallPanel {
     hp.add(logoLabel);
     hp.setCellWidth(logoLabel, logo.createImage().getWidth() + "px");
 
-    hp
-        .add(new UnsunkLabel(
-            "GWT Feed Reader<br/>"
-                + "<div class=\"snippit\">An RSS reader using the Google AJAX Feed API "
-                + "and the Google Web Toolkit</div>", true));
+    hp.add(new UnsunkLabel("GWT Feed Reader<br/>"
+        + "<div class=\"snippit\">An RSS reader using the "
+        + "Google AJAX Feed API and the Google Web Toolkit</div>", true));
     add(new PanelLabel(hp, null));
   }
 
