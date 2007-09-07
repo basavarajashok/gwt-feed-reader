@@ -21,8 +21,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 /**
  * A simple about panel.
  */
-public class AboutPanel extends SliderPanel {
-  public AboutPanel(SliderPanel parent) {
+public class AboutPanel extends WallToWallPanel {
+  public AboutPanel(WallToWallPanel parent) {
     super("About...", parent);
     addStyleName("AboutPanel");
 
@@ -37,8 +37,8 @@ public class AboutPanel extends SliderPanel {
     hp
         .add(new UnsunkLabel(
             "GWT Feed Reader<br/>"
-                + "<span class=\"snippit\">An RSS reader using the Google AJAX Feed API "
-                + "and the Google Web Toolkit</span>", true));
+                + "<div class=\"snippit\">An RSS reader using the Google AJAX Feed API "
+                + "and the Google Web Toolkit</div>", true));
     add(new PanelLabel(hp, null));
   }
 

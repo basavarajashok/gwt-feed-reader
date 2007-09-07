@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * Display all of the entries in a Feed so that the user may select one to view.
  */
-public class FeedPanel extends SliderPanel {
+public class FeedPanel extends WallToWallPanel {
   /**
    * This class serves as a synchronization point for downloading the contents
    * of a feed. If it contains any elements and there is no currently-loading

@@ -24,12 +24,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Displays a single entry in a feed.
  */
-public class EntryPanel extends SliderPanel {
+public class EntryPanel extends WallToWallPanel {
   final EntryWrapper entry;
   final PanelLabel panelLabel;
   boolean contentsSet = false;
   
-  public EntryPanel(final EntryWrapper entry, SliderPanel parent) {
+  public EntryPanel(final EntryWrapper entry, WallToWallPanel parent) {
     super(entry.getTitle(), parent);
     addStyleName("EntryPanel");
     this.entry = entry;

@@ -15,12 +15,6 @@
  */
 package com.google.gwt.sample.feedreader.client;
 
-import com.google.gwt.ajaxfeed.client.impl.ErrorWrapper;
-import com.google.gwt.ajaxfeed.client.impl.FeedCallback;
-import com.google.gwt.ajaxfeed.client.impl.Globals;
-import com.google.gwt.ajaxfeed.client.impl.LookupResultApi;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,7 +26,7 @@ import java.util.List;
 /**
  * The panel by which the application is configured.
  */
-public class ConfigurationPanel extends SliderPanel {
+public class ConfigurationPanel extends WallToWallPanel {
   private final Configuration configuration;
   private final HashMap feedLabels = new HashMap();
   private final ManifestPanel parent;

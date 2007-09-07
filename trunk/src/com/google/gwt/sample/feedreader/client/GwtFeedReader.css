@@ -8,14 +8,24 @@
   width: 100%;
   min-height: 416px;
   background: white;
-  overflow: hidden;
 }
 
 .PanelLabel {
-  width: 100%;
   padding: 10px;
   height: 43px;
+  width: 100%;
   border-bottom: 1px solid rgb(217, 217, 217);
+  table-layout: fixed;
+}
+
+.PanelLabel * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.PanelLabel table {
+  table-layout: fixed;
 }
 
 .backButton {
@@ -36,6 +46,7 @@
 .articleContents * {
   font-size: 11pt;
   font-weight: normal;
+  white-space: normal;
 }
 
 .header {
@@ -54,6 +65,7 @@
   font-size: 11pt;
   font-weight: normal;
   padding-left: 4px;
+  white-space: normal;
 }
 
 img {

@@ -38,9 +38,9 @@ import com.google.gwt.user.client.ui.Widget;
  * or alternate command that can be accessed by a second button in the title
  * bar. The contents of the panel should consist only of PanelLabel widgets.
  */
-public abstract class SliderPanel extends Composite implements HasHTML {
+public abstract class WallToWallPanel extends Composite implements HasHTML {
 
-  private static SliderPanel activePanel;
+  private static WallToWallPanel activePanel;
 
   protected final ClickListener parentClickListener = new ClickListener() {
     public void onClick(Widget w) {
@@ -48,7 +48,7 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     }
   };
 
-  private final SliderPanel parent;
+  private final WallToWallPanel parent;
   private final FlowPanel contents = new FlowPanel();
   private final HorizontalPanel header = new HorizontalPanel();
   private final PanelLabel panelLabel;
@@ -58,8 +58,9 @@ public abstract class SliderPanel extends Composite implements HasHTML {
   private Command editCommand;
   private HasText hasText;
   private HasHTML hasHtml;
+  private PanelLabel lastLabel;
 
-  public SliderPanel(String title, SliderPanel parent) {
+  public WallToWallPanel(String title, WallToWallPanel parent) {
     this.parent = parent;
     panelLabel = new PanelLabel(title, new Command() {
       public void execute() {
@@ -206,18 +207,19 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     }
 
     if (activePanel != null) {
+      // Save the label to scroll to when backing into the parent panel.
+      if (activePanel == parent) {
+        parent.setLastLabel(getLabel());
+      }
+      
       RootPanel.get().remove(activePanel);
     }
 
-    activePanel = SliderPanel.this;
-    RootPanel.get().add(SliderPanel.this, 0, 0);
+    activePanel = WallToWallPanel.this;
+    RootPanel.get().add(WallToWallPanel.this, 0, 0);
 
     DeferredCommand.addPause();
-    DeferredCommand.addCommand(new Command() {
-      public native void execute() /*-{
-       $wnd.scrollTo(0, 1);
-       }-*/;
-    });
+    DeferredCommand.addCommand(new ScrollToCommand(lastLabel));
   }
 
   /**
@@ -227,7 +229,11 @@ public abstract class SliderPanel extends Composite implements HasHTML {
     if (parent == null) {
       throw new RuntimeException("SliderPanel has no parent");
     }
-
+    
+    // When backing out, we don't want to go to our last label when the panel
+    // is re-entered.
+    setLastLabel(null);
+    
     parent.enter();
   }
 
@@ -235,4 +241,13 @@ public abstract class SliderPanel extends Composite implements HasHTML {
    * A short title to be used as the label of the back button.
    */
   protected abstract String getShortTitle();
+
+  /**
+   * Remember the last PanelLabel that was selected on the current panel.
+   * This is used to scroll the viewport down to the last selected panel when
+   * the WallToWallPanel is backed into.
+   */
+  private void setLastLabel(PanelLabel label) {
+    lastLabel = label;
+  }
 }
