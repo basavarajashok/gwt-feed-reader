@@ -17,7 +17,6 @@ package com.google.gwt.ajaxfeed.client.impl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Frame;
@@ -58,12 +57,7 @@ public final class Loader {
     SANDBOX.setWidth("0");
     SANDBOX.setHeight("0");
     RootPanel.get().add(SANDBOX, 0, 0);
-    // Allow the iframe's document to be set up first
-    DeferredCommand.addCommand(new Command() {
-      public void execute() {
-        setupDocument(getDocument(SANDBOX), apiKey);
-      }
-    });
+    setupDocument(getDocument(SANDBOX), apiKey);
   }
 
   /**
@@ -81,8 +75,6 @@ public final class Loader {
           cancel();
           closeDocument(getDocument(SANDBOX));
           command.execute();
-        } else {
-          System.out.println("Not ready");
         }
       }
     };
