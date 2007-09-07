@@ -15,8 +15,8 @@
  */
 package com.google.gwt.sample.feedreader.client;
 
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 
 /**
  * A simple about panel.
@@ -26,18 +26,19 @@ public class AboutPanel extends WallToWallPanel {
     super("About...", parent);
     addStyleName("AboutPanel");
 
-    HorizontalPanel hp = new HorizontalPanel();
-    hp.setVerticalAlignment(HorizontalPanel.ALIGN_TOP);
+    AbsolutePanel ap = new AbsolutePanel();
 
-    AbstractImagePrototype logo = Images.INSTANCE.logo();
     UnsunkImage logoLabel = new UnsunkImage(Resources.INSTANCE.logo());
-    hp.add(logoLabel);
-    hp.setCellWidth(logoLabel, logo.createImage().getWidth() + "px");
 
-    hp.add(new UnsunkLabel("GWT Feed Reader<br/>"
-        + "<div class=\"snippit\">An RSS reader using the "
-        + "Google AJAX Feed API and the Google Web Toolkit</div>", true));
-    add(new PanelLabel(hp, null));
+    UnsunkLabel label =
+        new UnsunkLabel("GWT Feed Reader<br/>"
+            + "<div class=\"snippit\">An RSS reader using the "
+            + "Google AJAX Feed API and the Google Web Toolkit</div>", true);
+    DOM.setStyleAttribute(label.getElement(), "padding-left", "92px");
+    ap.add(label);
+    ap.add(logoLabel, 0, 0);
+    
+    add(new PanelLabel(ap, null));
   }
 
   protected String getShortTitle() {

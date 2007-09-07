@@ -27,8 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * entry in a feed, or some other named action.
  */
 public class PanelLabel extends HorizontalPanel implements HasText {
-  private static final String ENTER_WIDTH =
-      Images.INSTANCE.enter().createImage().getWidth() + "px";
+  private static final String ENTER_WIDTH = "25px";
   
   final Command primary;
   final Widget widget;
