@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,21 +51,26 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
   private final FlowPanel contents = new FlowPanel();
   private final HorizontalPanel header = new HorizontalPanel();
   private final PanelLabel panelLabel;
-  private final UnsunkLabel statusLabel = new UnsunkLabel();
-  private final Hyperlink permalink = new Hyperlink();
+  private final UnsunkLabel titleLabel = new UnsunkLabel("");
 
   private Command editCommand;
   private HasText hasText;
   private HasHTML hasHtml;
-  private PanelLabel lastLabel;
+  private PanelLabel lastSelectedLabel;
 
   public WallToWallPanel(String title, WallToWallPanel parent) {
     this.parent = parent;
-    panelLabel = new PanelLabel(title, new Command() {
+    panelLabel = new PanelLabel("", new Command() {
       public void execute() {
         enter();
       }
-    });
+    }) {
+      public void setText(String title) {
+        titleLabel.setText(title);
+        super.setText(title);
+      }
+    };
+    panelLabel.setText(title);
 
     header.setVerticalAlignment(HorizontalPanel.ALIGN_TOP);
     header.addStyleName("header");
@@ -85,7 +89,6 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
       header.add(l);
     }
 
-    UnsunkLabel titleLabel = new UnsunkLabel(title);
     titleLabel.addStyleName("titleLabel");
     header.add(titleLabel);
     header.setCellWidth(titleLabel, "100%");
@@ -164,29 +167,6 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
     contents.add(h);
   }
 
-  /**
-   * Add a permalink to the bottom of the panel.
-   * 
-   * @param token the history token to associate with the link
-   */
-  public void setPermalink(String token) {
-    if (token == null) {
-      permalink.setVisible(false);
-    } else {
-      permalink.setTargetHistoryToken(token);
-      permalink.setVisible(true);
-    }
-  }
-
-  /**
-   * Set a status message at the bottom of the panel.
-   * 
-   * @param status the new status message
-   */
-  public void setStatus(String status) {
-    statusLabel.setText(status);
-  }
-
   public void setText(String text) {
     UnsunkLabel l;
     hasText = l = new UnsunkLabel(text);
@@ -209,9 +189,9 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
     if (activePanel != null) {
       // Save the label to scroll to when backing into the parent panel.
       if (activePanel == parent) {
-        parent.setLastLabel(getLabel());
+        parent.setLastSelectedLabel(getLabel());
       }
-      
+
       RootPanel.get().remove(activePanel);
     }
 
@@ -219,7 +199,7 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
     RootPanel.get().add(WallToWallPanel.this, 0, 0);
 
     DeferredCommand.addPause();
-    DeferredCommand.addCommand(new ScrollToCommand(lastLabel));
+    DeferredCommand.addCommand(new ScrollToCommand(lastSelectedLabel));
   }
 
   /**
@@ -229,11 +209,11 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
     if (parent == null) {
       throw new RuntimeException("SliderPanel has no parent");
     }
-    
+
     // When backing out, we don't want to go to our last label when the panel
     // is re-entered.
-    setLastLabel(null);
-    
+    setLastSelectedLabel(null);
+
     parent.enter();
   }
 
@@ -243,11 +223,11 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
   protected abstract String getShortTitle();
 
   /**
-   * Remember the last PanelLabel that was selected on the current panel.
-   * This is used to scroll the viewport down to the last selected panel when
-   * the WallToWallPanel is backed into.
+   * Remember the last PanelLabel that was selected on the current panel. This
+   * is used to scroll the viewport down to the last selected panel when the
+   * WallToWallPanel is backed into.
    */
-  private void setLastLabel(PanelLabel label) {
-    lastLabel = label;
+  private void setLastSelectedLabel(PanelLabel label) {
+    lastSelectedLabel = label;
   }
 }

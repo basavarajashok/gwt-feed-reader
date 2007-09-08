@@ -19,19 +19,19 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A widget that represents a single label. A label might represent a feed, and
  * entry in a feed, or some other named action.
  */
-public class PanelLabel extends HorizontalPanel implements HasText {
-  private static final String ENTER_WIDTH = "25px";
-  
+public class PanelLabel extends SimplePanel implements HasText {
+
   final Command primary;
   final Widget widget;
-  final UnsunkImage enterImage = new UnsunkImage(Resources.INSTANCE.enter());
+
+  // final UnsunkImage enterImage = new UnsunkImage(Resources.INSTANCE.enter());
 
   public PanelLabel(String text) {
     this(text, null, false);
@@ -49,18 +49,13 @@ public class PanelLabel extends HorizontalPanel implements HasText {
     this.primary = primary;
     this.widget = widget;
 
-    widget.setWidth("100%");
     add(widget);
+    addStyleName("PanelLabel");
 
     if (primary != null) {
-      add(enterImage);
-      setCellWidth(enterImage, ENTER_WIDTH);
-      setCellHorizontalAlignment(enterImage, HorizontalPanel.ALIGN_RIGHT);
-      setCellVerticalAlignment(enterImage, HorizontalPanel.ALIGN_MIDDLE);
       sinkEvents(Event.ONCLICK);
+      setEnterImageUrl(Resources.INSTANCE.enter());
     }
-
-    addStyleName("PanelLabel");
   }
 
   public String getText() {
@@ -77,9 +72,10 @@ public class PanelLabel extends HorizontalPanel implements HasText {
         primary.execute();
     }
   }
-  
+
   public void setEnterImageUrl(String url) {
-    enterImage.setUrl(url);
+    DOM.setStyleAttribute(getElement(), "background", "url('" + url
+        + "') no-repeat right");
   }
 
   public void setText(String text) {

@@ -17,10 +17,9 @@ package com.google.gwt.ajaxfeed.client.impl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * This class must be invoked before any other class in the Google AJAX Feed API
@@ -31,7 +30,14 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public final class Loader {
   static Command command;
-  private static final Frame SANDBOX = new Frame();
+  private static final Element SANDBOX;// = new Frame();
+  
+  static {
+    SANDBOX = DOM.getElementById("LoaderSandbox");
+    if (SANDBOX == null) {
+      throw new RuntimeException("No LoaderSandbox iframe in host page");
+    }
+  }
 
   /**
    * Indicates whether or not the external JavaScript for the Google AJAX Feed
@@ -54,9 +60,6 @@ public final class Loader {
     command = onLoadCallback;
     registerSandboxCallback();
 
-    SANDBOX.setWidth("0");
-    SANDBOX.setHeight("0");
-    RootPanel.get().add(SANDBOX, 0, 0);
     setupDocument(getDocument(SANDBOX), apiKey);
   }
 
@@ -102,8 +105,7 @@ public final class Loader {
   /**
    * Extract the document Element from a Frame.
    */
-  private static native Element getDocument(Frame frame) /*-{
-   var elt = frame.@com.google.gwt.user.client.ui.UIObject::getElement()();
+  private static native Element getDocument(Element elt) /*-{
    
    // FF || IE
    var doc = elt.contentDocument || elt.contentWindow;

@@ -17,7 +17,7 @@ package com.google.gwt.sample.feedreader.client;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,7 +59,7 @@ public class ConfigurationPanel extends WallToWallPanel {
       UnsunkLabel info = new UnsunkLabel("Add feeds by searching.");
       info.addStyleName("snippit");
 
-      VerticalPanel vp = new VerticalPanel();
+      FlowPanel vp = new FlowPanel();
       vp.add(title);
       vp.add(info);
 
@@ -92,7 +92,7 @@ public class ConfigurationPanel extends WallToWallPanel {
     UnsunkLabel snippit = new UnsunkLabel(feed.getUrl());
     snippit.addStyleName("snippit");
 
-    VerticalPanel vp = new VerticalPanel();
+    FlowPanel vp = new FlowPanel();
     vp.add(title);
     vp.add(snippit);
 
