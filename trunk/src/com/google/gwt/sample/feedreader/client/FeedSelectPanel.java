@@ -26,7 +26,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,7 +35,8 @@ import java.util.List;
  * A panel to allow the user to choose feeds from a search result.
  */
 public class FeedSelectPanel extends WallToWallPanel {
-  private static final FindResultApi RESULT_API = (FindResultApi) GWT.create(FindResultApi.class);
+  private static final FindResultApi RESULT_API =
+      (FindResultApi) GWT.create(FindResultApi.class);
 
   public FeedSelectPanel(final ConfigurationPanel parent,
       final Configuration configuration, String query) {
@@ -53,7 +54,7 @@ public class FeedSelectPanel extends WallToWallPanel {
 
         // Remove the loading message
         clear();
-        
+
         // Update the UI piecewise
         DeferredCommand.addCommand(new IncrementalCommand() {
           List feeds = configuration.getFeeds();
@@ -67,12 +68,13 @@ public class FeedSelectPanel extends WallToWallPanel {
 
             UnsunkLabel title = new UnsunkLabel(entry.getTitle(), true);
             title.addStyleName("title");
-            UnsunkLabel snippit = new UnsunkLabel(entry.getContentSnippet());
+            UnsunkLabel snippit =
+                new UnsunkLabel(entry.getContentSnippet(), true);
             snippit.addStyleName("snippit");
             UnsunkLabel url = new UnsunkLabel(entry.getUrl());
             url.addStyleName("snippit");
 
-            VerticalPanel vp = new VerticalPanel();
+            FlowPanel vp = new FlowPanel();
             vp.add(title);
             vp.add(snippit);
             vp.add(url);

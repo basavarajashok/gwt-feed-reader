@@ -12,7 +12,7 @@
 
 .PanelLabel {
   padding: 10px;
-  width: 100%;
+  padding-right: 35px;
   border-bottom: 1px solid rgb(217, 217, 217);
   table-layout: fixed;
 }
@@ -25,6 +25,11 @@
 
 .PanelLabel table {
   table-layout: fixed;
+}
+
+.FeedSelectPanel b {
+  font-size: inherit !important;
+  font-weight: inherit !important;
 }
 
 .backButton {

@@ -19,7 +19,7 @@ import com.google.gwt.ajaxfeed.client.impl.EntryWrapper;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * Displays a single entry in a feed.
@@ -28,28 +28,28 @@ public class EntryPanel extends WallToWallPanel {
   final EntryWrapper entry;
   final PanelLabel panelLabel;
   boolean contentsSet = false;
-  
+
   public EntryPanel(final EntryWrapper entry, WallToWallPanel parent) {
     super(entry.getTitle(), parent);
     addStyleName("EntryPanel");
     this.entry = entry;
-    
+
     UnsunkLabel title = new UnsunkLabel(entry.getTitle());
     title.addStyleName("title");
-    
+
     UnsunkLabel snippit = new UnsunkLabel(entry.getContentSnippet());
     snippit.addStyleName("snippit");
-    
-    VerticalPanel vp = new VerticalPanel();
+
+    FlowPanel vp = new FlowPanel();
     vp.add(title);
     vp.add(snippit);
-    
+
     this.panelLabel = new PanelLabel(vp, new Command() {
       public void execute() {
         enter();
       }
     });
-    
+
     setEditCommand("Details", "Show entry details", new Command() {
       public void execute() {
         (new DetailPanel(entry, EntryPanel.this)).enter();
@@ -61,26 +61,34 @@ public class EntryPanel extends WallToWallPanel {
     if (isAttached()) {
       return;
     }
-    
+
     if (!contentsSet) {
       PanelLabel contents = new PanelLabel(entry.getContent(), null, true);
       contents.addStyleName("articleContents");
       add(contents);
       add(new PanelLabel("Open article", new Command() {
         public void execute() {
-         Window.open(entry.getLink(), "_blank", null);
+          Window.open(entry.getLink(), "_blank", null);
         }
       }));
-     contentsSet = true;
+      contentsSet = true;
     }
     super.enter();
     History.newItem("");
   }
   
+  public void exit() {
+    // Dump the DOM elements on exit to avoid memory issues.
+    clear();
+    contentsSet = false;
+    
+    super.exit();
+  }
+
   public PanelLabel getLabel() {
     return panelLabel;
   }
-  
+
   protected String getShortTitle() {
     return "Entry";
   }
