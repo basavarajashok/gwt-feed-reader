@@ -54,7 +54,7 @@ public class PanelLabel extends SimplePanel implements HasText {
 
     if (primary != null) {
       sinkEvents(Event.ONCLICK);
-      setEnterImageUrl(Resources.INSTANCE.enter());
+      setEnterImageUrl(Resources.INSTANCE.enter().getUrl());
     }
   }
 

@@ -76,7 +76,7 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
     header.addStyleName("header");
     // Dynamic style injection not yet working
     DOM.setStyleAttribute(header.getElement(), "background", "url('"
-        + Resources.INSTANCE.toolbar() + "') #6d84a2 repeat-x");
+        + Resources.INSTANCE.toolbar().getUrl() + "') #6d84a2 repeat-x");
 
     if (parent != null) {
       Label l = new Label(parent.getShortTitle());
@@ -85,7 +85,7 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
       l.addStyleName("backButton");
       // Remove once dynamic style injection working
       DOM.setStyleAttribute(l.getElement(), "-webkit-border-image", "url('"
-          + Resources.INSTANCE.backButton() + "') 0 8 0 14");
+          + Resources.INSTANCE.backButton().getUrl() + "') 0 8 0 14");
       header.add(l);
     }
 
@@ -148,7 +148,7 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
     l.addStyleName("goButton");
     // Remove once dynamic style injection working
     DOM.setStyleAttribute(l.getElement(), "-webkit-border-image", "url('"
-        + Resources.INSTANCE.button() + "') 0 5 0 5");
+        + Resources.INSTANCE.button().getUrl() + "') 0 5 0 5");
     l.setTitle(title);
     l.addClickListener(new ClickListener() {
       public void onClick(Widget w) {

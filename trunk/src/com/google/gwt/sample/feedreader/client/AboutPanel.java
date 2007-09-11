@@ -28,7 +28,8 @@ public class AboutPanel extends WallToWallPanel {
 
     AbsolutePanel ap = new AbsolutePanel();
 
-    UnsunkImage logoLabel = new UnsunkImage(Resources.INSTANCE.logo());
+    UnsunkImage logoLabel = new UnsunkImage();
+    Resources.INSTANCE.logo().setElementUrlProperty(logoLabel.getElement(), "src");
 
     UnsunkLabel label =
         new UnsunkLabel("GWT Feed Reader<br/>"
