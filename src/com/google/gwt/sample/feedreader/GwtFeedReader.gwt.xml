@@ -16,6 +16,6 @@
   <inherits name="com.google.gwt.user.User" />
   <inherits name="com.google.gwt.http.HTTP" />
   <inherits name="com.google.gwt.ajaxfeed.AjaxFeedApi" />
-  <inherits name="com.google.gwt.cachebundle.CacheBundle" />
+  <inherits name="com.google.gwt.resources.Resources" />
   <entry-point class="com.google.gwt.sample.feedreader.client.GwtFeedReader" />
 </module>

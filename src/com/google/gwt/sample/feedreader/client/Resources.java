@@ -15,55 +15,56 @@
  */
 package com.google.gwt.sample.feedreader.client;
 
-import com.google.gwt.cachebundle.client.CacheBundle;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ResourceBundle;
+import com.google.gwt.resources.client.ResourcePrototype;
 
 /**
  * A CacheBundle that allows random extra files to be given the royal cache
  * treatment.
  * 
  */
-public interface Resources extends CacheBundle {
+public interface Resources extends ResourceBundle {
   public static final Resources INSTANCE =
       (Resources) GWT.create(Resources.class);
 
   /**
    * @gwt.resource iPhoneBackButton.png
    */
-  public String backButton();
+  public ResourcePrototype backButton();
 
   /**
    * @gwt.resource pinstripes.png
    */
-  public String background();
+  public ResourcePrototype background();
 
   /**
    * @gwt.resource iPhoneButton.png
    */
-  public String button();
+  public ResourcePrototype button();
 
   /**
    * @gwt.resource GwtFeedReader.css
    */
-  public String css();
+  public ResourcePrototype css();
 
   /**
    * @gwt.resource iPhoneArrow.png
    */
-  public String enter();
+  public ResourcePrototype enter();
 
   /**
    * @gwt.resource gwtLogo.png
    */
-  public String logo();
+  public ResourcePrototype logo();
   
   /**
    * @gwt.resource spinner.gif
    */
-  public String spinner();
+  public ResourcePrototype spinner();
   
   /**
    * @gwt.resource iPhoneToolbar.png
    */
-  public String toolbar();
+  public ResourcePrototype toolbar();
 }

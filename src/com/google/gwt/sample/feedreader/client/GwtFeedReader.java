@@ -81,13 +81,13 @@ public class GwtFeedReader implements EntryPoint {
 
     // Add the CSS to the document
     Element styleLink = DOM.createElement("link");
-    DOM.setElementProperty(styleLink, "href", Resources.INSTANCE.css());
+    Resources.INSTANCE.css().setElementUrlProperty(styleLink, "href");
     DOM.setElementProperty(styleLink, "rel", "stylesheet");
     DOM.appendChild(getDocumentHead(), styleLink);
 
     // Touch up body, rather than doing dynamic style injection
     DOM.setStyleAttribute(RootPanel.getBodyElement(), "background", "url('"
-        + Resources.INSTANCE.background() + "') silver repeat");
+        + Resources.INSTANCE.background().getUrl() + "') silver repeat");
 
     configuration = new Configuration();
     // Create the root UI element
@@ -135,7 +135,8 @@ public class GwtFeedReader implements EntryPoint {
 
     // Add the background logo. This has a nice side-effect of preloading
     // the ImageBundle before the main UI is used.
-    UnsunkImage logo = new UnsunkImage(Resources.INSTANCE.logo());
+    UnsunkImage logo = new UnsunkImage();
+    Resources.INSTANCE.logo().setElementUrlProperty(logo.getElement(), "src");
     logo.addStyleName("logo");
     RootPanel.get().add(logo, 0, 0);
   }

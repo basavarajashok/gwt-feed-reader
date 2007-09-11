@@ -73,7 +73,7 @@ public class FeedPanel extends WallToWallPanel {
     loadStarted = true;
     loadFinished = false;
 
-    getLabel().setEnterImageUrl(Resources.INSTANCE.spinner());
+    getLabel().setEnterImageUrl(Resources.INSTANCE.spinner().getUrl());
 
     JavaScriptObject feedJso = feedApi.construct(feed.getUrl());
     feedApi.setNumEntries(feedJso, 20);
@@ -96,7 +96,7 @@ public class FeedPanel extends WallToWallPanel {
         feed.setTitle(title);
         getLabel().setText(title);
 
-        getLabel().setEnterImageUrl(Resources.INSTANCE.enter());
+        getLabel().setEnterImageUrl(Resources.INSTANCE.enter().getUrl());
         
         final Date lastViewed = new Date(feed.getLastArticle());
         
@@ -129,7 +129,7 @@ public class FeedPanel extends WallToWallPanel {
               }
 
               // Reset the label's entry icon
-              getLabel().setEnterImageUrl(Resources.INSTANCE.enter());
+              getLabel().setEnterImageUrl(Resources.INSTANCE.enter().getUrl());
 
               return false;
             }

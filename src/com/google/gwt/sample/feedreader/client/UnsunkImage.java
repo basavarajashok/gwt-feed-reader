@@ -22,8 +22,12 @@ import com.google.gwt.user.client.ui.Widget;
  * Provides a trivial Image widget that does not sink any events.
  */
 public class UnsunkImage extends Widget {
-  public UnsunkImage(String src) {
+  public UnsunkImage() {
     setElement(DOM.createImg());
+  }
+  
+  public UnsunkImage(String src) {
+    this();
     setUrl(src);
   }
   
