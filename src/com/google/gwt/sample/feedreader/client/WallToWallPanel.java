@@ -16,7 +16,6 @@
 package com.google.gwt.sample.feedreader.client;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
@@ -74,18 +73,12 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
 
     header.setVerticalAlignment(HorizontalPanel.ALIGN_TOP);
     header.addStyleName("header");
-    // Dynamic style injection not yet working
-    DOM.setStyleAttribute(header.getElement(), "background", "url('"
-        + Resources.INSTANCE.toolbar().getUrl() + "') #6d84a2 repeat-x");
 
     if (parent != null) {
       Label l = new Label(parent.getShortTitle());
       l.addClickListener(parentClickListener);
       l.addStyleName("button");
       l.addStyleName("backButton");
-      // Remove once dynamic style injection working
-      DOM.setStyleAttribute(l.getElement(), "-webkit-border-image", "url('"
-          + Resources.INSTANCE.backButton().getUrl() + "') 0 8 0 14");
       header.add(l);
     }
 
@@ -146,9 +139,6 @@ public abstract class WallToWallPanel extends Composite implements HasHTML {
     Label l = new Label(label);
     l.addStyleName("button");
     l.addStyleName("goButton");
-    // Remove once dynamic style injection working
-    DOM.setStyleAttribute(l.getElement(), "-webkit-border-image", "url('"
-        + Resources.INSTANCE.button().getUrl() + "') 0 5 0 5");
     l.setTitle(title);
     l.addClickListener(new ClickListener() {
       public void onClick(Widget w) {

@@ -19,7 +19,7 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.dev.util.Util;
-import com.google.gwt.resources.client.impl.InlineResourcePrototype;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.user.rebind.SourceWriter;
 
 import java.io.IOException;
@@ -43,16 +43,10 @@ public class InlineResourceBundleGenerator extends
   // (2 ^ 15) * 4/3 < 2 ^ 16, so we can safely inline files up to 32k.
   private static final int MAX_INLINE_SIZE = 2 << 15;
 
-  protected void addToOutput(TreeLogger logger, GeneratorContext context,
+  protected void addDataResource(TreeLogger logger, GeneratorContext context,
       String name, URL resource, SourceWriter sw)
       throws UnableToCompleteException {
     byte[] bytes = Util.readURLAsBytes(resource);
-
-    // If the input file contains null bytes, treat is as a binary file.
-    boolean isBinary = false;
-    for (int i = 0; i < bytes.length && !isBinary; i++) {
-      isBinary |= (bytes[i] == 0);
-    }
 
     if (bytes.length < MAX_INLINE_SIZE) {
       logger.log(TreeLogger.DEBUG, "Inlining " + resource.getFile(), null);
@@ -69,7 +63,7 @@ public class InlineResourceBundleGenerator extends
         throw new UnableToCompleteException();
       }
 
-      sw.println("new " + InlineResourcePrototype.class.getName() + "() {");
+      sw.println("new " + DataResource.class.getName() + "() {");
       sw.indent();
 
       sw.println("public String getName() {");
@@ -80,32 +74,16 @@ public class InlineResourceBundleGenerator extends
 
       sw.println("public String getUrl() {");
       sw.indent();
-      if (isBinary) {
-        sw.println("return \"data:" + mimeType + ";base64," + base64Contents
-            + "\";");
-      } else {
-        sw.println("return \"data:" + mimeType + ",\" + getContents();");
-      }
+      sw.println("return \"data:" + mimeType + ";base64," + base64Contents
+          + "\";");
       sw.outdent();
       sw.println("}");
-
-      sw.println("public String getContents() {");
-      sw.indent();
-      if (isBinary) {
-        sw.println("throw new RuntimeException(\"" + name
-            + " is a binary file\");");
-      } else {
-        sw.println("return \""
-            + escape(new String(Util.readURLAsChars(resource))) + "\";");
-      }
-      sw.outdent();
-      sw.println("}");
-
+      
       sw.outdent();
       sw.println("}");
 
     } else {
-      super.addToOutput(logger, context, name, resource, sw);
+      super.addDataResource(logger, context, name, resource, sw);
     }
   }
 

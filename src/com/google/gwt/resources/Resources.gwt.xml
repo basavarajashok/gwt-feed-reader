@@ -15,7 +15,7 @@
 <!-- ResourceBundle supports renaming files with strong names at compile time  -->
 <module>
   <!-- Pull in the necessary base support, including user.agent detection -->
-  <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.google.gwt.core.Core" />
 
   <!--  This acts as a switch to disable the use of data: URLs -->
   <define-property name="ResourceBundle.enableInlining" values="true,false" />

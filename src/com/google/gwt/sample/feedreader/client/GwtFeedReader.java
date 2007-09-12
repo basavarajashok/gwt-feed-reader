@@ -18,10 +18,9 @@ package com.google.gwt.sample.feedreader.client;
 import com.google.gwt.ajaxfeed.client.impl.Loader;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.sample.feedreader.client.resources.Resources;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Timer;
@@ -62,15 +61,6 @@ public class GwtFeedReader implements EntryPoint {
    }-*/;
 
   /**
-   * Append an element to the documents HEAD element. This should be in DOM.
-   * 
-   * @param elt the Element to append
-   */
-  private native Element getDocumentHead() /*-{
-   return $doc.getElementsByTagName("head")[0];
-   }-*/;
-
-  /**
    * Initialize the global state of the application.
    */
   private void initialize() {
@@ -79,20 +69,11 @@ public class GwtFeedReader implements EntryPoint {
       return;
     }
 
-    // Add the CSS to the document
-    Element styleLink = DOM.createElement("link");
-    Resources.INSTANCE.css().setElementUrlProperty(styleLink, "href");
-    DOM.setElementProperty(styleLink, "rel", "stylesheet");
-    DOM.appendChild(getDocumentHead(), styleLink);
-
-    // Touch up body, rather than doing dynamic style injection
-    DOM.setStyleAttribute(RootPanel.getBodyElement(), "background", "url('"
-        + Resources.INSTANCE.background().getUrl() + "') silver repeat");
-
     configuration = new Configuration();
+
     // Create the root UI element
     manifest = new ManifestPanel(configuration);
-    
+
     // Use a WindowCloseListener to save the configuration
     Window.addWindowCloseListener(new WindowCloseListener() {
 
@@ -133,10 +114,12 @@ public class GwtFeedReader implements EntryPoint {
       }
     });
 
-    // Add the background logo. This has a nice side-effect of preloading
-    // the ImageBundle before the main UI is used.
-    UnsunkImage logo = new UnsunkImage();
-    Resources.INSTANCE.logo().setElementUrlProperty(logo.getElement(), "src");
+    // This is only in the function scope to reduce the amount of time the
+    // resource data has to be kept in the JSVM
+    StyleInjector.injectStylesheet(Resources.INSTANCE.css()
+        .getText(), Resources.INSTANCE);
+
+    UnsunkLabel logo = new UnsunkLabel();
     logo.addStyleName("logo");
     RootPanel.get().add(logo, 0, 0);
   }
