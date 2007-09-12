@@ -26,8 +26,9 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.dev.util.Util;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ResourcePrototype;
-import com.google.gwt.resources.client.impl.StaticResourcePrototype;
+import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -36,6 +37,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Copies selected files into module output with strong names and generates the
@@ -81,6 +85,7 @@ public class StaticResourceBundleGenerator extends Generator {
 
     // The generated class needs to be able to determine the module base URL
     f.addImport(GWT.class.getName());
+    f.addImport(ResourcePrototype.class.getName());
 
     // Determine the interface to implement
     if (sourceType.isInterface() != null) {
@@ -99,6 +104,10 @@ public class StaticResourceBundleGenerator extends Generator {
         context.tryCreate(logger, sourceType.getPackage().getName(),
             generatedSimpleSourceName);
 
+    // Aggregates the field names of the resources for use with
+    // ResourceBundle.getResources()
+    List fieldNames = new ArrayList();
+
     // If an implementation already exists, we don't need to do any work
     if (out != null) {
 
@@ -107,8 +116,20 @@ public class StaticResourceBundleGenerator extends Generator {
 
       JMethod[] methods = sourceType.getMethods();
 
+      // We'll need these for comparisons in the loop
+      JClassType dataType =
+          typeOracle.findType(DataResource.class.getName()).isInterface();
+      JClassType textType =
+          typeOracle.findType(TextResource.class.getName()).isInterface();
+
       for (int i = 0; i < methods.length; i++) {
         JMethod m = methods[i];
+        JClassType returnType = m.getReturnType().isInterface();
+        if (returnType == null) {
+          logger.log(TreeLogger.ERROR, "Cannot implement " + m.getName()
+              + ": not an interface return type.", null);
+          throw new UnableToCompleteException();
+        }
 
         // The local URL by which the generator can access the file's content
         URL resourceUrl = getResourceUrlFromMetaData(logger, m);
@@ -122,18 +143,29 @@ public class StaticResourceBundleGenerator extends Generator {
         sw.indent();
 
         String fieldName = (m.getName() + "_instance").toUpperCase();
+        fieldNames.add(fieldName);
         sw.println("return " + fieldName + ";");
 
         sw.outdent();
         sw.println("}");
 
-        sw.print("private static final " + ResourcePrototype.class.getName()
-            + " " + fieldName + " = ");
-        addToOutput(logger, context, m.getName(), resourceUrl, sw);
+        sw.print("private static final "
+            + m.getReturnType().getQualifiedSourceName() + " " + fieldName
+            + " = ");
+        if (returnType.isAssignableTo(dataType)) {
+          addDataResource(logger, context, m.getName(), resourceUrl, sw);
+        } else if (returnType.isAssignableTo(textType)) {
+          addTextResource(logger, context, m.getName(), resourceUrl, sw);
+        } else {
+          logger.log(TreeLogger.ERROR, "Cannot implement " + m.getName()
+              + ": unknown return type.", null);
+          throw new UnableToCompleteException();
+        }
+
         sw.println(";");
       }
 
-      writePostlude(logger, context, sw);
+      writePostlude(logger, context, sw, fieldNames);
 
       // Write the generated code to disk
       sw.commit(logger);
@@ -147,7 +179,7 @@ public class StaticResourceBundleGenerator extends Generator {
    * Add a ResourceBundle-referenced file to the module's output. The extension
    * of the resource will be preserved to ensure mime-types are correct.
    */
-  protected void addToOutput(TreeLogger logger, GeneratorContext context,
+  protected void addDataResource(TreeLogger logger, GeneratorContext context,
       String name, URL resource, SourceWriter sw)
       throws UnableToCompleteException {
     byte[] bytes = Util.readURLAsBytes(resource);
@@ -209,12 +241,37 @@ public class StaticResourceBundleGenerator extends Generator {
     }
 
     // Write the expression to create the subtype.
-    sw.println("new " + StaticResourcePrototype.class.getName() + "() {");
+    sw.println("new " + DataResource.class.getName() + "() {");
     sw.indent();
 
     sw.println("public String getUrl() {");
     sw.indent();
     sw.println("return GWT.getModuleBaseURL() + \"" + outputName + "\";");
+    sw.outdent();
+    sw.println("}");
+
+    sw.println("public String getName() {");
+    sw.indent();
+    sw.println("return \"" + name + "\";");
+    sw.outdent();
+    sw.println("}");
+
+    sw.outdent();
+    sw.println("}");
+  }
+
+  protected void addTextResource(TreeLogger logger, GeneratorContext context,
+      String name, URL resource, SourceWriter sw)
+      throws UnableToCompleteException {
+    // Write the expression to create the subtype.
+    sw.println("new " + TextResource.class.getName() + "() {");
+    sw.indent();
+
+    sw.println("public String getText() {");
+    sw.indent();
+    sw.println("return \""
+        + escape(new String(Util.readURLAsChars(resource))).replaceAll("\0",
+            "\\0") + "\";");
     sw.outdent();
     sw.println("}");
 
@@ -237,7 +294,18 @@ public class StaticResourceBundleGenerator extends Generator {
   }
 
   protected void writePostlude(TreeLogger logger, GeneratorContext context,
-      SourceWriter sw) {
+      SourceWriter sw, List fieldNames) {
+    sw.println("public ResourcePrototype[] getResources() {");
+    sw.indent();
+    sw.println("return new ResourcePrototype[] {");
+    sw.indent();
+    for (Iterator i = fieldNames.iterator(); i.hasNext();) {
+      sw.println(i.next().toString() + ",");
+    }
+    sw.outdent();
+    sw.println("};");
+    sw.outdent();
+    sw.println("}");
   }
 
   /**

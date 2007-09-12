@@ -16,11 +16,12 @@
 package com.google.gwt.resources.client;
 
 /**
- * Used by {@link ResourcePrototype#fetchContents(ResourceCallback)} to indicate
- * that the resource's contents are available or that an error occurred while
- * attempting to retrieve the resources.
+ * A non-text resource.
  */
-public interface ResourceCallback {
-  public void onError(ResourcePrototype resource, Throwable t);
-  public void onSuccess(ResourcePrototype resource, String contents);
+public interface DataResource extends ResourcePrototype {
+  /**
+   * Retrieves a URL by which the contents of the resource can be obtained. This
+   * will be an absolute URL.
+   */
+  public String getUrl();
 }

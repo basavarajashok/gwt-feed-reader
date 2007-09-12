@@ -13,16 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.gwt.sample.feedreader.client;
+package com.google.gwt.sample.feedreader.client.resources;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ResourceBundle;
-import com.google.gwt.resources.client.ResourcePrototype;
+import com.google.gwt.resources.client.TextResource;
 
 /**
- * A CacheBundle that allows random extra files to be given the royal cache
- * treatment.
- * 
+ * A ResourceBundle that holds the references to the CSS resources we wish to
+ * use with {@link StyleInjector}.
  */
 public interface Resources extends ResourceBundle {
   public static final Resources INSTANCE =
@@ -31,40 +31,40 @@ public interface Resources extends ResourceBundle {
   /**
    * @gwt.resource iPhoneBackButton.png
    */
-  public ResourcePrototype backButton();
+  public DataResource backButton();
 
   /**
    * @gwt.resource pinstripes.png
    */
-  public ResourcePrototype background();
+  public DataResource background();
 
   /**
    * @gwt.resource iPhoneButton.png
    */
-  public ResourcePrototype button();
+  public DataResource button();
 
   /**
    * @gwt.resource GwtFeedReader.css
    */
-  public ResourcePrototype css();
+  public TextResource css();
 
   /**
    * @gwt.resource iPhoneArrow.png
    */
-  public ResourcePrototype enter();
+  public DataResource enter();
 
   /**
    * @gwt.resource gwtLogo.png
    */
-  public ResourcePrototype logo();
-  
+  public DataResource logo();
+
   /**
    * @gwt.resource spinner.gif
    */
-  public ResourcePrototype spinner();
-  
+  public DataResource spinner();
+
   /**
    * @gwt.resource iPhoneToolbar.png
    */
-  public ResourcePrototype toolbar();
+  public DataResource toolbar();
 }

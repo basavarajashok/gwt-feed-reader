@@ -15,8 +15,7 @@
  */
 package com.google.gwt.sample.feedreader.client;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * A simple about panel.
@@ -26,20 +25,20 @@ public class AboutPanel extends WallToWallPanel {
     super("About...", parent);
     addStyleName("AboutPanel");
 
-    AbsolutePanel ap = new AbsolutePanel();
-
-    UnsunkImage logoLabel = new UnsunkImage();
-    Resources.INSTANCE.logo().setElementUrlProperty(logoLabel.getElement(), "src");
-
+    UnsunkLabel logoLabel = new UnsunkLabel();
+    logoLabel.addStyleName("logo");
+    
     UnsunkLabel label =
         new UnsunkLabel("GWT Feed Reader<br/>"
             + "<div class=\"snippit\">An RSS reader using the "
             + "Google AJAX Feed API and the Google Web Toolkit</div>", true);
-    DOM.setStyleAttribute(label.getElement(), "padding-left", "92px");
-    ap.add(label);
-    ap.add(logoLabel, 0, 0);
+    label.addStyleName("aboutLabel");
     
-    add(new PanelLabel(ap, null));
+    FlowPanel fp = new FlowPanel();
+    fp.add(logoLabel);
+    fp.add(label);
+
+    add(new PanelLabel(fp, null));
   }
 
   protected String getShortTitle() {

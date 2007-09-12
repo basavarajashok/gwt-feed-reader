@@ -54,7 +54,7 @@ public class PanelLabel extends SimplePanel implements HasText {
 
     if (primary != null) {
       sinkEvents(Event.ONCLICK);
-      setEnterImageUrl(Resources.INSTANCE.enter().getUrl());
+      addStyleName("hasCommand");
     }
   }
 
@@ -72,10 +72,13 @@ public class PanelLabel extends SimplePanel implements HasText {
         primary.execute();
     }
   }
-
-  public void setEnterImageUrl(String url) {
-    DOM.setStyleAttribute(getElement(), "background", "url('" + url
-        + "') no-repeat right");
+  
+  public void setBusy(boolean busy) {
+    if (busy) {
+      addStyleName("busy");
+    } else {
+      removeStyleName("busy");
+    }
   }
 
   public void setText(String text) {

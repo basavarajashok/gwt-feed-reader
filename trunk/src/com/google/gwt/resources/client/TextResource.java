@@ -16,19 +16,9 @@
 package com.google.gwt.resources.client;
 
 /**
- * Encapsulates the state of a request for the content of one or more resources.
+ * A resource that contains text that should be incorporated into the compiled
+ * output.
  */
-public interface ResourceRequest {
-  /**
-   * Discontinue the request.
-   */
-  public void cancel();
-
-  /**
-   * Indicates if the request is still being processed.
-   * 
-   * @return <code>true</code> if the resource or resources being retrieved as
-   *         part of the request have been made available to the caller.
-   */
-  public boolean isPending();
+public interface TextResource extends ResourcePrototype {
+  public String getText();
 }

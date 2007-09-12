@@ -4,10 +4,15 @@
   font-size: 17pt;
 }
 
+.AboutPanel .PanelLabel * {
+  overflow: visible;
+  text-overflow: inherit;
+}
+
 .SliderPanel {
   width: 100%;
-  min-height: 416px;
   background: white;
+  min-height: 416px;
 }
 
 .PanelLabel {
@@ -32,11 +37,18 @@
   font-weight: inherit !important;
 }
 
+.aboutLabel {
+  margin-left: -5px;
+}
+
 .backButton {
     border-width: 0 8px 0 14px;
+    -webkit-border-image: url('%backButton%') 0 8 0 14;
 }
+
 .goButton {
     border-width: 0 5px;
+    -webkit-border-image: url('%button%') 0 5 0 5;
 }
 
 .button {
@@ -47,10 +59,18 @@
   vertical-align: middle;
 }
 
+.busy {
+  background: url('%spinner%') no-repeat right !important;
+}
+
 .articleContents * {
   font-size: 11pt;
   font-weight: normal;
   white-space: normal;
+}
+
+.hasCommand {
+  background: url('%enter%') no-repeat right;
 }
 
 .header {
@@ -59,10 +79,18 @@
   width: 100%;
   padding: 10px;
   vertical-align: middle;
+  background: url('%toolbar%') #6d84a2 repeat-x;
 }
 
 .last {
   padding-bottom: 14px !important;
+}
+
+.logo {
+  background: url('%logo%') no-repeat top left;
+  float: left;
+  width: 91px;
+  height: 75px;
 }
 
 .snippit {
@@ -72,6 +100,10 @@
   font-weight: normal;
   padding-left: 4px;
   white-space: normal;
+}
+
+body {
+  background: url('%background%') silver repeat;
 }
 
 img {

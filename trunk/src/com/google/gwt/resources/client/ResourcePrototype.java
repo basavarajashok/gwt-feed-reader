@@ -15,21 +15,10 @@
  */
 package com.google.gwt.resources.client;
 
-import com.google.gwt.user.client.Element;
-
 /**
  * Encapsulates information about a particular resource.
  */
 public interface ResourcePrototype {
-  /**
-   * Retrieve the contents of the resource. This is preferable to using
-   * {@link #getUrl()} because browser-specific behavior may be implemented.
-   * 
-   * @param callback a ResourceCallback to invoke when the contents of the
-   *          resource are available.
-   */
-  public ResourceRequest fetchContents(ResourceCallback callback);
-
   /**
    * Returns the name of the function within the ResourceBundle used to create
    * the ResourcePrototype.
@@ -38,22 +27,4 @@ public interface ResourcePrototype {
    *         the ResourcePrototype
    */
   public String getName();
-
-  /**
-   * Retrieves a URL by which the contents of the resource can be obtained. This
-   * will be an absolute URL.
-   */
-  public String getUrl();
-
-  /**
-   * Configures an Element's property to reference the contents of a resource.
-   * This method is preferable to a combination of {@link #getUrl()} and
-   * {@link com.google.gwt.user.client.DOM} because it may allow for better
-   * browser-specific behavior.
-   * 
-   * @param elt the element to modify
-   * @param propertyName the name of the property that should reference the
-   *          contents of the resource
-   */
-  public void setElementUrlProperty(Element elt, String propertyName);
 }

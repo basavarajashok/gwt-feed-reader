@@ -24,5 +24,9 @@ package com.google.gwt.resources.client;
  * original resource.
  */
 public interface ResourceBundle {
-
+  /**
+   * A convenience method to iterate over all ResourcePrototypes contained in
+   * the ResourceBundle.
+   */
+  public ResourcePrototype[] getResources();
 }
