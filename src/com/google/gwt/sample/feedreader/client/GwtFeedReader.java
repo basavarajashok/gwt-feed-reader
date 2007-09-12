@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.widgetideas.client.StyleInjector;
 
 /**
  * The main entry point for the application.

@@ -16,11 +16,7 @@
   <inherits name="com.google.gwt.user.User" />
   <inherits name="com.google.gwt.http.HTTP" />
   <inherits name="com.google.gwt.ajaxfeed.AjaxFeedApi" />
-  <inherits name="com.google.gwt.resources.Resources" />
+  <inherits name="com.google.gwt.libideas.ImmutableResources" />
+  <inherits name="com.google.gwt.widgetideas.StyleInjector" />
   <entry-point class="com.google.gwt.sample.feedreader.client.GwtFeedReader" />
-  
-  <replace-with class="com.google.gwt.sample.feedreader.client.StyleInjector.StyleInjectorImplIE">
-    <when-type-is class="com.google.gwt.sample.feedreader.client.StyleInjector.StyleInjectorImpl" />
-    <when-property-is name="user.agent" value="ie6" />
-  </replace-with>
 </module>
