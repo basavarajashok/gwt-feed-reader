@@ -1,10 +1,10 @@
 The files:
 
-      src/com/google/gwt/sample/ajaxfeed/client/iPhoneArrow.png
-      src/com/google/gwt/sample/ajaxfeed/public/iPhoneButton.png
-      src/com/google/gwt/sample/ajaxfeed/public/iPhoneBackButton.png
-      src/com/google/gwt/sample/ajaxfeed/public/pinstripes.png
-      src/com/google/gwt/sample/ajaxfeed/public/iPhoneToolbar.png
+      src/com/google/gwt/sample/ajaxfeed/client/resources/iPhoneArrow.png
+      src/com/google/gwt/sample/ajaxfeed/client/resources/iPhoneButton.png
+      src/com/google/gwt/sample/ajaxfeed/client/resources/iPhoneBackButton.png
+      src/com/google/gwt/sample/ajaxfeed/client/resources/pinstripes.png
+      src/com/google/gwt/sample/ajaxfeed/client/resources/iPhoneToolbar.png
 
 were copied from the following website on 20070706
       http://joehewitt.com/files/iphone/
