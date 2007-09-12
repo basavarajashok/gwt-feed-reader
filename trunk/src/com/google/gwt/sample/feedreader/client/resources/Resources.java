@@ -16,15 +16,15 @@
 package com.google.gwt.sample.feedreader.client.resources;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ResourceBundle;
-import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.libideas.client.DataResource;
+import com.google.gwt.libideas.client.ImmutableResourceBundle;
+import com.google.gwt.libideas.client.TextResource;
 
 /**
  * A ResourceBundle that holds the references to the CSS resources we wish to
- * use with {@link StyleInjector}.
+ * use with {@link com.google.gwt.widgetideas.client.StyleInjector}.
  */
-public interface Resources extends ResourceBundle {
+public interface Resources extends ImmutableResourceBundle {
   public static final Resources INSTANCE =
       (Resources) GWT.create(Resources.class);
 
