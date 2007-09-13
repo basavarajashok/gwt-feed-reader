@@ -1,0 +1,6 @@
+# URLs, one per line
+http://arstechnica.com/index.ars/rss
+http://slashdot.org/index.rss
+http://googlewebtoolkit.blogspot.com/atom.xml
+http://thinkgeek.com/thinkgeek.rss
+http://ajaxian.com/index.xml

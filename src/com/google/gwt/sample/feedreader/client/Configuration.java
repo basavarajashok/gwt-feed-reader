@@ -19,6 +19,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.jsio.client.JSList;
 import com.google.gwt.jsio.client.JSONWrapperException;
 import com.google.gwt.jsio.client.JSWrapper;
+import com.google.gwt.sample.feedreader.client.resources.Resources;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 
@@ -35,6 +36,7 @@ import java.util.Set;
 public class Configuration {
   /**
    * A JSON object that encapsulates the metadata for a feed.
+   * 
    * @gwt.beanProperties
    */
   public abstract static class Feed implements JSWrapper {
@@ -59,6 +61,7 @@ public class Configuration {
   /**
    * The top-level JSON object that encapsulates the configuration of the
    * application.
+   * 
    * @gwt.beanProperties
    */
   abstract static class Container implements JSWrapper {
@@ -83,14 +86,6 @@ public class Configuration {
       return toReturn.toString();
     }
   }
-
-  /**
-   * Default feeds to use when others are not available.
-   */
-  private static final String[] FEEDS = {
-      "http://arstechnica.com/index.ars/rss", "http://slashdot.org/index.rss",
-      "http://googlewebtoolkit.blogspot.com/atom.xml",
-      "http://thinkgeek.com/thinkgeek.rss", "http://ajaxian.com/index.xml",};
 
   private static final String COOKIE_NAME = "GwtFeedReader";
 
@@ -128,7 +123,7 @@ public class Configuration {
   }
 
   /**
-   * Returns the live list of Feed metadata objects.  Modifications to this
+   * Returns the live list of Feed metadata objects. Modifications to this
    * object will be reflected throughout the application.
    */
   public List getFeeds() {
@@ -137,6 +132,7 @@ public class Configuration {
 
   /**
    * Add a pipe-delimited set of feed URLs to the configuration.
+   * 
    * @return <code>true</code> iff at least one new feed was added.
    */
   public boolean importFeeds(String token) {
@@ -162,8 +158,8 @@ public class Configuration {
       return false;
     }
 
-    boolean ok = Window.confirm("Do you wish to import " + toAdd.size()
-        + " feeds?");
+    boolean ok =
+        Window.confirm("Do you wish to import " + toAdd.size() + " feeds?");
 
     if (ok) {
       for (Iterator i = toAdd.iterator(); i.hasNext();) {
@@ -199,9 +195,9 @@ public class Configuration {
    * Save the configuration into the application's cookie.
    */
   public void save() {
-    Cookies.setCookie(COOKIE_NAME, container.toString(), new Date(
-        System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 365), null, null,
-        false);
+    Cookies.setCookie(COOKIE_NAME, container.toString(), new Date(System
+        .currentTimeMillis()
+        + 1000L * 60 * 60 * 24 * 365), null, null, false);
 
     System.out.println(Cookies.getCookie(COOKIE_NAME));
   }
@@ -210,18 +206,21 @@ public class Configuration {
    * This method would not be strictly necessary with some server-side support.
    */
   private void initialize() {
-    if (!Window.confirm("You have no feeds configured."
-        + " Would you like a default selection?")) {
-      return;
-    }
-
     JSList feeds = container.getFeeds();
 
-    for (int i = 0; i < FEEDS.length; i++) {
+    String[] defaultFeeds =
+        Resources.INSTANCE.defaultFeeds().getText().split("\n");
+
+    for (int i = 0; i < defaultFeeds.length; i++) {
+      String url = defaultFeeds[i];
+      if (url.startsWith("#")) {
+        continue;
+      }
+
       Feed f = (Feed) GWT.create(Feed.class);
 
-      f.setUrl(FEEDS[i]);
-      f.setTitle(FEEDS[i]);
+      f.setUrl(url);
+      f.setTitle(url);
       f.setLastArticle(0);
 
       feeds.add(f);
