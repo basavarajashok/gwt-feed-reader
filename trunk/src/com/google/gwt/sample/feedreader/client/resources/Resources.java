@@ -47,6 +47,11 @@ public interface Resources extends ImmutableResourceBundle {
    * @gwt.resource GwtFeedReader.css
    */
   public TextResource css();
+  
+  /**
+   * @gwt.resource defaultFeeds.txt
+   */
+  public TextResource defaultFeeds();
 
   /**
    * @gwt.resource iPhoneArrow.png
