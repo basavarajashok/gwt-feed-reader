@@ -115,9 +115,11 @@ public class GwtFeedReader implements EntryPoint {
       }
     });
 
-    // This is only in the function scope to reduce the amount of time the
-    // resource data has to be kept in the JSVM
-    StyleInjector.injectStylesheet(Resources.INSTANCE.css()
+    // The stylesheet are factored into two pieces: a common template
+    // that defines sizes and structural elements.
+    StyleInjector.injectStylesheet(Resources.INSTANCE.layoutCss().getText());
+    // And further CSS rules that provide look-and-feel and localized resources
+    StyleInjector.injectStylesheet(Resources.INSTANCE.appearanceCss()
         .getText(), Resources.INSTANCE);
 
     UnsunkLabel logo = new UnsunkLabel();

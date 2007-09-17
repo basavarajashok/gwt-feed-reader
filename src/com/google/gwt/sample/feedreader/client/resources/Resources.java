@@ -21,12 +21,18 @@ import com.google.gwt.libideas.client.ImmutableResourceBundle;
 import com.google.gwt.libideas.client.TextResource;
 
 /**
- * A ResourceBundle that holds the references to the CSS resources we wish to
- * use with {@link com.google.gwt.widgetideas.client.StyleInjector}.
+ * A ResourceBundle that holds the references to the resources used by
+ * GwtFeedReader.
  */
 public interface Resources extends ImmutableResourceBundle {
   public static final Resources INSTANCE =
       (Resources) GWT.create(Resources.class);
+
+  /**
+   * The non-structural CSS rules.
+   * @gwt.resource appearance.css
+   */
+  public TextResource appearanceCss();
 
   /**
    * @gwt.resource iPhoneBackButton.png
@@ -34,7 +40,7 @@ public interface Resources extends ImmutableResourceBundle {
   public DataResource backButton();
 
   /**
-   * @gwt.resource pinstripes.png
+   * @gwt.resource background.png
    */
   public DataResource background();
 
@@ -42,21 +48,22 @@ public interface Resources extends ImmutableResourceBundle {
    * @gwt.resource iPhoneButton.png
    */
   public DataResource button();
-
-  /**
-   * @gwt.resource GwtFeedReader.css
-   */
-  public TextResource css();
   
   /**
    * @gwt.resource defaultFeeds.txt
    */
   public TextResource defaultFeeds();
-
+  
   /**
    * @gwt.resource iPhoneArrow.png
    */
   public DataResource enter();
+
+  /**
+   * Structural CSS rules.
+   * @gwt.resource layout.css
+   */
+  public TextResource layoutCss();
 
   /**
    * @gwt.resource gwtLogo.png

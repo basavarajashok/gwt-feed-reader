@@ -4,41 +4,17 @@
   font-size: 17pt;
 }
 
-.AboutPanel .PanelLabel * {
-  overflow: visible;
-  text-overflow: inherit;
-}
-
 .SliderPanel {
-  width: 100%;
   background: white;
-  min-height: 416px;
 }
 
 .PanelLabel {
-  padding: 10px;
-  padding-right: 35px;
   border-bottom: 1px solid rgb(217, 217, 217);
-  table-layout: fixed;
-}
-
-.PanelLabel * {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.PanelLabel table {
-  table-layout: fixed;
 }
 
 .FeedSelectPanel b {
   font-size: inherit !important;
   font-weight: inherit !important;
-}
-
-.aboutLabel {
-  margin-left: -5px;
 }
 
 .backButton {
@@ -54,8 +30,6 @@
 .button {
   font-size: 10pt;
   font-weight: normal;
-  height: 29px;
-  line-height: 29px;
   vertical-align: middle;
 }
 
@@ -63,53 +37,25 @@
   background: url('%spinner%') no-repeat right !important;
 }
 
-.articleContents * {
-  font-size: 11pt;
-  font-weight: normal;
-  white-space: normal;
-}
-
 .hasCommand {
   background: url('%enter%') no-repeat right;
 }
 
 .header {
-  height: 44px;
   color: white;
-  width: 100%;
-  padding: 10px;
   vertical-align: middle;
   background: url('%toolbar%') #6d84a2 repeat-x;
 }
 
-.last {
-  padding-bottom: 14px !important;
-}
-
 .logo {
   background: url('%logo%') no-repeat top left;
-  float: left;
-  width: 91px;
-  height: 75px;
 }
 
 .snippit {
-  font-size: 11pt;
-  line-height: 11pt;
-  height: 33pt;
   font-weight: normal;
-  padding-left: 4px;
-  white-space: normal;
 }
 
 body {
   background: url('%background%') silver repeat;
 }
 
-img {
-  max-width: 95%;
-}
-
-#loading {
-  display: none;
-}
