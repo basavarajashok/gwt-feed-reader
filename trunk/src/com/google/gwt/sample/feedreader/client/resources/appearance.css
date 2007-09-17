@@ -28,6 +28,7 @@
 }
 
 .button {
+  cursor: pointer;
   font-size: 10pt;
   font-weight: normal;
   vertical-align: middle;
@@ -45,6 +46,7 @@
 
 .hasCommand {
   background: url('%enter%') no-repeat right;
+  cursor: pointer;
 }
 
 .header {
