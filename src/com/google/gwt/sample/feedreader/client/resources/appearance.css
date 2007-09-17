@@ -37,6 +37,12 @@
   background: url('%spinner%') no-repeat right !important;
 }
 
+.externalLink {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .hasCommand {
   background: url('%enter%') no-repeat right;
 }
