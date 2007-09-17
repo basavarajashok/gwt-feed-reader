@@ -115,7 +115,7 @@ public class ManifestPanel extends WallToWallPanel {
     throw new RuntimeException("This should not be called on the root panel");
   }
 
-  public void showFeed(Configuration.Feed feed) {
+  public void showFeed(Configuration.Feed feed, String entryUrl) {
     FeedPanel p = (FeedPanel) feedPanelMap.get(feed);
     if (p == null) {
       // We don't want to take the hit of reloading everything, so defer this
@@ -124,7 +124,12 @@ public class ManifestPanel extends WallToWallPanel {
       p = new FeedPanel(feed, this);
       feedPanelMap.put(feed, p);
     }
-    p.enter();
+    
+    if (entryUrl == null) {
+      p.enter();
+    } else {
+      p.showEntry(entryUrl);
+    }
   }
 
   protected String getShortTitle() {
@@ -133,6 +138,10 @@ public class ManifestPanel extends WallToWallPanel {
 
   void setDirty() {
     dirty = true;
+  }
+  
+  void showAbout() {
+    (new ConfigurationPanel(configuration, this)).showAbout();
   }
 
   void showConfiguration() {

@@ -23,13 +23,16 @@ import com.google.gwt.ajaxfeed.client.impl.FeedResultApi;
 import com.google.gwt.ajaxfeed.client.impl.JsonFeedApi;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Display all of the entries in a Feed so that the user may select one to view.
@@ -41,12 +44,14 @@ public class FeedPanel extends WallToWallPanel {
   private static final JsonFeedApi jsonFeedApi =
       (JsonFeedApi) GWT.create(JsonFeedApi.class);
 
-//  private final PanelLabel panelLabel;
+  // private final PanelLabel panelLabel;
   private final Configuration.Feed feed;
+  private final Map /* <String, EntryPanel> */entryPanels = new HashMap();
   private boolean loadStarted = false;
   private boolean loadFinished = false;
   private boolean drawn = false;
   private List entries;
+  private String requestedEntry;
 
   public FeedPanel(final Configuration.Feed feed, ManifestPanel parent) {
     super(feed.getTitle(), parent);
@@ -56,6 +61,11 @@ public class FeedPanel extends WallToWallPanel {
 
     addStyleName("FeedPanel");
     setText("Loading");
+  }
+
+  public void clear() {
+    entryPanels.clear();
+    super.clear();
   }
 
   public boolean isLoadFinished() {
@@ -97,9 +107,9 @@ public class FeedPanel extends WallToWallPanel {
         getLabel().setText(title);
 
         getLabel().setBusy(false);
-        
+
         final Date lastViewed = new Date(feed.getLastArticle());
-        
+
         // Count the number of new entries while the next feed downloads
         DeferredCommand.addCommand(new IncrementalCommand() {
           final Iterator i = entries.iterator();
@@ -163,6 +173,28 @@ public class FeedPanel extends WallToWallPanel {
     return "Feed";
   }
 
+  /**
+   * Display the feed entry with the given link URL. If the FeedPanel has not
+   * been loaded, this method will display the FeedPanel. If there is no entry
+   * with the specified link URL, the FeedPanel will be displayed.
+   * 
+   * @param entryUrl the link URL of the entry that should be displayed
+   */
+  void showEntry(String entryUrl) {
+    if (loadFinished) {
+      EntryPanel panel = (EntryPanel) entryPanels.get(entryUrl);
+      if (panel != null) {
+        panel.enter();
+      } else {
+        enter();
+      }
+    } else {
+      // Couldn't find the named article, just show the panel.
+      requestedEntry = entryUrl;
+      enter();
+    }
+  }
+
   private void redraw() {
     if (drawn || !isAttached()) {
       return;
@@ -176,27 +208,28 @@ public class FeedPanel extends WallToWallPanel {
     }
 
     clear();
-   
-    DeferredCommand.addCommand(new IncrementalCommand() {
+
+    DeferredCommand.addCommand(new Command() {
       final Iterator i = entries.iterator();
       PanelLabel lastLabel;
 
-      // DOM updates can be kind of slow, so we'll show the user updates as they
-      // happen
-      public boolean execute() {
-        EntryWrapper entry = (EntryWrapper) i.next();
-        EntryPanel panel = new EntryPanel(entry, FeedPanel.this);
-        lastLabel = panel.getLabel();
-        add(lastLabel);
+      public void execute() {
+        while (i.hasNext()) {
+          EntryWrapper entry = (EntryWrapper) i.next();
+          EntryPanel panel = new EntryPanel(entry, feed, FeedPanel.this);
+          entryPanels.put(String.valueOf(entry.getLink().hashCode()), panel);
+          lastLabel = panel.getLabel();
+          add(lastLabel);
 
-        if (i.hasNext()) {
-          return true;
-
-        } else {
-          // We want to format the last element a little differently
-          lastLabel.addStyleName("last");
-          
-          return false;
+          if (!i.hasNext()) {
+            // We want to format the last element a little differently
+            lastLabel.addStyleName("last");
+          }
+        }
+        
+        if (requestedEntry != null) {
+          showEntry(requestedEntry);
+          requestedEntry = null;
         }
       }
     });

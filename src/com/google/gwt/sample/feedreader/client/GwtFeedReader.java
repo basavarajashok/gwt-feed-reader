@@ -161,6 +161,11 @@ public class GwtFeedReader implements EntryPoint {
     }
 
     token = URL.decodeComponent(token);
+    
+    if ("about".equals(token)) {
+      manifest.showAbout();
+      return;
+    }
 
     if ("manifest".equals(token)) {
       manifest.enter();
@@ -171,18 +176,30 @@ public class GwtFeedReader implements EntryPoint {
       manifest.showConfiguration();
       return;
     }
+    
+    String feedUrl;
+    String entryUrl;
+    
+    if (token.indexOf("||") != -1) {
+      String[] halves = token.split("\\|\\|");
+      feedUrl = halves[0];
+      entryUrl = halves[1];
+    } else {
+      feedUrl = token;
+      entryUrl = null;
+    }
 
     // See if the token represents a new feed URL. If a new URL was added
     // to the configuration, tell the manifest panel it should redraw itself
     // the next time it's shown.
-    if (configuration.importFeeds(token)) {
+    if (configuration.importFeeds(feedUrl)) {
       manifest.setDirty();
     }
 
     // Find the URL and display it
-    Configuration.Feed feed = configuration.findFeed(token);
+    Configuration.Feed feed = configuration.findFeed(feedUrl);
     if (feed != null) {
-      manifest.showFeed(feed);
+      manifest.showFeed(feed, entryUrl);
     }
   }
 }

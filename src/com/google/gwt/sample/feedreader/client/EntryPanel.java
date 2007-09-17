@@ -29,12 +29,15 @@ import com.google.gwt.user.client.ui.FlowPanel;
 public class EntryPanel extends WallToWallPanel {
   final EntryWrapper entry;
   final PanelLabel panelLabel;
+  final Configuration.Feed parentFeed;
   boolean contentsSet = false;
 
-  public EntryPanel(final EntryWrapper entry, WallToWallPanel parent) {
+  public EntryPanel(final EntryWrapper entry,
+      final Configuration.Feed parentFeed, WallToWallPanel parent) {
     super(entry.getTitle(), parent);
     addStyleName("EntryPanel");
     this.entry = entry;
+    this.parentFeed = parentFeed;
 
     UnsunkLabel title = new UnsunkLabel(entry.getTitle());
     title.addStyleName("title");
@@ -48,7 +51,7 @@ public class EntryPanel extends WallToWallPanel {
 
     this.panelLabel = new PanelLabel(vp, new Command() {
       public void execute() {
-        enter();
+        History.newItem(parentFeed.getUrl() + "||" + entry.getLink().hashCode());
       }
     });
   }
@@ -71,8 +74,7 @@ public class EntryPanel extends WallToWallPanel {
       contentsSet = true;
     }
     super.enter();
-    // Add an item so that we can back into the FeedPanel
-    History.newItem("");
+    History.newItem(parentFeed.getUrl() + "||" + entry.getLink().hashCode());
   }
 
   public void exit() {
