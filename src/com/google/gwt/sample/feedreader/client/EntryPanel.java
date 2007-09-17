@@ -17,6 +17,8 @@ package com.google.gwt.sample.feedreader.client;
 
 import com.google.gwt.ajaxfeed.client.impl.EntryWrapper;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -64,6 +66,7 @@ public class EntryPanel extends WallToWallPanel {
 
     if (!contentsSet) {
       PanelLabel contents = new PanelLabel(entry.getContent(), null, true);
+      retargetLinks(contents.getElement());
       contents.addStyleName("articleContents");
       add(contents);
       add(new PanelLabel("Open article", new Command() {
@@ -74,14 +77,15 @@ public class EntryPanel extends WallToWallPanel {
       contentsSet = true;
     }
     super.enter();
+    // Add an item so that we can back into the FeedPanel
     History.newItem("");
   }
-  
+
   public void exit() {
     // Dump the DOM elements on exit to avoid memory issues.
     clear();
     contentsSet = false;
-    
+
     super.exit();
   }
 
@@ -91,5 +95,22 @@ public class EntryPanel extends WallToWallPanel {
 
   protected String getShortTitle() {
     return "Entry";
+  }
+
+  /**
+   * Force all links to open in a new window so that application state isn't
+   * lost.
+   * 
+   * @param elt
+   */
+  protected void retargetLinks(Element elt) {
+    int numChildren = DOM.getChildCount(elt);
+    for (int i = 0; i < numChildren; i++) {
+      Element child = DOM.getChild(elt, i);
+      if (DOM.getElementAttribute(child, "href") != null) {
+        DOM.setElementAttribute(child, "target", "_blank");
+      }
+      retargetLinks(child);
+    }
   }
 }

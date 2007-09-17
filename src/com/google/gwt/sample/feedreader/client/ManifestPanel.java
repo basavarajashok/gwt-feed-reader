@@ -97,7 +97,7 @@ public class ManifestPanel extends WallToWallPanel {
       public void run() {
         refresh();
       }
-    }).scheduleRepeating(30 * 60 * 1000);
+    }).scheduleRepeating(5 * 60 * 1000);
 
     addStyleName("ManifestPanel");
   }
