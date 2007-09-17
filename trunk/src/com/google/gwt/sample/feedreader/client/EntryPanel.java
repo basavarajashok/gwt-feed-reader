@@ -51,12 +51,6 @@ public class EntryPanel extends WallToWallPanel {
         enter();
       }
     });
-
-    setEditCommand("Details", "Show entry details", new Command() {
-      public void execute() {
-        (new DetailPanel(entry, EntryPanel.this)).enter();
-      }
-    });
   }
 
   public void enter() {
@@ -71,7 +65,7 @@ public class EntryPanel extends WallToWallPanel {
       add(contents);
       add(new PanelLabel("Open article", new Command() {
         public void execute() {
-          Window.open(entry.getLink(), "_blank", null);
+          Window.open(entry.getLink(), "_blank", "");
         }
       }));
       contentsSet = true;
@@ -107,8 +101,12 @@ public class EntryPanel extends WallToWallPanel {
     int numChildren = DOM.getChildCount(elt);
     for (int i = 0; i < numChildren; i++) {
       Element child = DOM.getChild(elt, i);
-      if (DOM.getElementAttribute(child, "href") != null) {
-        DOM.setElementAttribute(child, "target", "_blank");
+      String href = DOM.getElementProperty(child, "href");
+      if (href != null) {
+        DOM.setElementAttribute(child, "onclick", "javascript:window.open('"
+            + href + "', '_blank');");
+        DOM.removeElementAttribute(child, "href");
+        DOM.setElementAttribute(child, "class", "externalLink");
       }
       retargetLinks(child);
     }
