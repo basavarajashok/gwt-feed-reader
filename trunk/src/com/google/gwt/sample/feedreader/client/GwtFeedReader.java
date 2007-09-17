@@ -40,8 +40,13 @@ public class GwtFeedReader implements EntryPoint {
     // The first thing that we want to do is to get the Ajax Feed API
     // to download and initialize. All of the other initialization should
     // be deferred until the iframe kicks off
-    Loader.init(getApiFeedKey(), new Command() {
-      public void execute() {
+    Loader.init(getApiFeedKey(), new Loader.LoaderCallback() {
+      public void onError(Throwable t) {
+        Window.alert("Unable to initialize AJAX Feed API.\n" + t.getMessage());
+        t.printStackTrace();
+      }
+
+      public void onLoad() {
         onAjaxFeedLoad();
       }
     });
@@ -119,8 +124,8 @@ public class GwtFeedReader implements EntryPoint {
     // that defines sizes and structural elements.
     StyleInjector.injectStylesheet(Resources.INSTANCE.layoutCss().getText());
     // And further CSS rules that provide look-and-feel and localized resources
-    StyleInjector.injectStylesheet(Resources.INSTANCE.appearanceCss()
-        .getText(), Resources.INSTANCE);
+    StyleInjector.injectStylesheet(
+        Resources.INSTANCE.appearanceCss().getText(), Resources.INSTANCE);
 
     UnsunkLabel logo = new UnsunkLabel();
     logo.addStyleName("logo");

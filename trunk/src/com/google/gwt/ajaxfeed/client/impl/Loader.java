@@ -15,8 +15,8 @@
  */
 package com.google.gwt.ajaxfeed.client.impl;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
@@ -29,14 +29,28 @@ import com.google.gwt.user.client.Timer;
  * API is ready for use.
  */
 public final class Loader {
-  static Command command;
-  private static final Element SANDBOX;// = new Frame();
-  
+  /**
+   * A callback interface used to signal state changes in the load process.
+   */
+  public static interface LoaderCallback {
+    public void onError(Throwable t);
+
+    public void onLoad();
+  }
+
+  /**
+   * The callback to invoke.
+   */
+  private static LoaderCallback callback;
+
+  /**
+   * A reference to the iframe containing the AJAX Feed API.
+   */
+  private static final Element SANDBOX;
+
   static {
     SANDBOX = DOM.getElementById("LoaderSandbox");
-    if (SANDBOX == null) {
-      throw new RuntimeException("No LoaderSandbox iframe in host page");
-    }
+    assert SANDBOX != null : "No LoaderSandbox iframe in host page.";
   }
 
   /**
@@ -53,14 +67,22 @@ public final class Loader {
    * Initialize the Google AJAX Feed API.
    * 
    * @param apiKey The developer's API key
-   * @param onLoadCallback A Command that will be executed when the API is
-   *          initialized.
+   * @param apiCallback the callback to invoke when the Loader has finished
    */
-  public static void init(final String apiKey, Command onLoadCallback) {
-    command = onLoadCallback;
+  public static void init(final String apiKey, LoaderCallback apiCallback) {
+    callback = apiCallback;
     registerSandboxCallback();
 
     setupDocument(getDocument(SANDBOX), apiKey);
+  }
+
+  /**
+   * This is called from the sandbox iframe with the top-level google object.
+   */
+  static void ajaxFeedError(JavaScriptObject ex) {
+    closeDocument(getDocument(SANDBOX));
+    callback.onError(new RuntimeException("Unable to initialize ajax feed api "
+        + ex.toString()));
   }
 
   /**
@@ -77,7 +99,7 @@ public final class Loader {
         if (apiReady()) {
           cancel();
           closeDocument(getDocument(SANDBOX));
-          command.execute();
+          callback.onLoad();
         }
       }
     };
@@ -132,36 +154,27 @@ public final class Loader {
    * @see #ajaxFeedLoad(JavaScriptObject)
    */
   private static native void registerSandboxCallback() /*-{
+   $wnd.AjaxFeedError = @com.google.gwt.ajaxfeed.client.impl.Loader::ajaxFeedError(Lcom/google/gwt/core/client/JavaScriptObject;);
    $wnd.AjaxFeedLoad = @com.google.gwt.ajaxfeed.client.impl.Loader::ajaxFeedLoad(Lcom/google/gwt/core/client/JavaScriptObject;);
    }-*/;
 
   private static void setupDocument(Element doc, String apiKey) {
+    Resources resources = (Resources) GWT.create(Resources.class);
+
+    String docContents = resources.bootstrap().getText();
+    docContents =
+        docContents.replaceAll("KEY", (apiKey != null) ? "?key=" + apiKey : "");
+
     openDocument(doc);
-    write(doc, "<html><head>");
-    
-    // Download the common loader and specify the developer's API key
-    write(doc,
-        "<script type=\"text/javascript\" src=\"http://www.google.com/jsapi");
-    if (apiKey != null) {
-      write(doc, "?key=" + apiKey);
+
+    // IE can't handle having the document written as a single string
+    String[] lines = docContents.split("\n");
+    for (int i = 0 ; i < lines.length; i++) {
+      write(doc, lines[i]);
     }
-    write(doc, "\"></script>");
     
-    // Execute an inline script
-    write(doc, "<script type=\"text/javascript\">");
-    
-    // Tell the common Google loader to go fetch the feeds API
-    write(doc, "google.load('feeds', '1', {'nocss' : true});");
-    
-    // Tell the Loader code we just started the load process
-    write(doc, "window.parent.AjaxFeedLoad(google);");
-    
-    // Close the script and finish out the document's contents
-    write(doc, "</script>");
-    write(doc, "</head><body></body></html>");
-    
-    // We don't close the document here because the jsapi loader also does
-    // some document.write calls
+    // Don't close the document because the loader API will also perform
+    // document.write calls, which would re-open and thus destoy the document
   }
 
   private static native void write(Element doc, String data) /*-{
