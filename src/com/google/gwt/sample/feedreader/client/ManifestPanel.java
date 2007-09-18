@@ -147,6 +147,10 @@ public class ManifestPanel extends WallToWallPanel {
   void showConfiguration() {
     (new ConfigurationPanel(configuration, this)).enter();
   }
+  
+  void showSearch(String search) {
+    (new ConfigurationPanel(configuration, this)).showSearch(search);
+  }
 
   private void refresh() {
     dirty = false;
