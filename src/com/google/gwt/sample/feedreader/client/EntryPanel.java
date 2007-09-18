@@ -16,6 +16,7 @@
 package com.google.gwt.sample.feedreader.client;
 
 import com.google.gwt.ajaxfeed.client.impl.EntryWrapper;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -51,7 +52,7 @@ public class EntryPanel extends WallToWallPanel {
 
     this.panelLabel = new PanelLabel(vp, new Command() {
       public void execute() {
-        History.newItem(parentFeed.getUrl() + "||" + entry.getLink().hashCode());
+        History.newItem(parentFeed.getUrl() + "||" + URL.encodeComponent(entry.getLink()));
       }
     });
   }
@@ -74,7 +75,7 @@ public class EntryPanel extends WallToWallPanel {
       contentsSet = true;
     }
     super.enter();
-    History.newItem(parentFeed.getUrl() + "||" + entry.getLink().hashCode());
+    History.newItem(parentFeed.getUrl() + "||" + URL.encodeComponent(entry.getLink()));
   }
 
   public void exit() {
