@@ -23,8 +23,6 @@ import com.google.gwt.ajaxfeed.client.impl.FeedResultApi;
 import com.google.gwt.ajaxfeed.client.impl.JsonFeedApi;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
@@ -210,27 +208,29 @@ public class FeedPanel extends WallToWallPanel {
 
     clear();
 
-    DeferredCommand.addCommand(new Command() {
+    DeferredCommand.addCommand(new IncrementalCommand() {
       final Iterator i = entries.iterator();
       PanelLabel lastLabel;
 
-      public void execute() {
-        while (i.hasNext()) {
-          EntryWrapper entry = (EntryWrapper) i.next();
-          EntryPanel panel = new EntryPanel(entry, feed, FeedPanel.this);
-          entryPanels.put(entry.getLink(), panel);
-          lastLabel = panel.getLabel();
-          add(lastLabel);
+      public boolean execute() {
+        EntryWrapper entry = (EntryWrapper) i.next();
+        EntryPanel panel = new EntryPanel(entry, feed, FeedPanel.this);
+        entryPanels.put(entry.getLink(), panel);
+        lastLabel = panel.getLabel();
+        add(lastLabel);
 
-          if (!i.hasNext()) {
-            // We want to format the last element a little differently
-            lastLabel.addStyleName("last");
+        if (i.hasNext()) {
+          return true;
+        } else {
+          // We want to format the last element a little differently
+          lastLabel.addStyleName("last");
+
+          if (requestedEntry != null) {
+            showEntry(requestedEntry);
+            requestedEntry = null;
           }
-        }
-        
-        if (requestedEntry != null) {
-          showEntry(requestedEntry);
-          requestedEntry = null;
+
+          return false;
         }
       }
     });
