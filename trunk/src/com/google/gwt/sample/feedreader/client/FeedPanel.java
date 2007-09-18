@@ -23,6 +23,7 @@ import com.google.gwt.ajaxfeed.client.impl.FeedResultApi;
 import com.google.gwt.ajaxfeed.client.impl.JsonFeedApi;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
@@ -217,7 +218,7 @@ public class FeedPanel extends WallToWallPanel {
         while (i.hasNext()) {
           EntryWrapper entry = (EntryWrapper) i.next();
           EntryPanel panel = new EntryPanel(entry, feed, FeedPanel.this);
-          entryPanels.put(String.valueOf(entry.getLink().hashCode()), panel);
+          entryPanels.put(entry.getLink(), panel);
           lastLabel = panel.getLabel();
           add(lastLabel);
 
