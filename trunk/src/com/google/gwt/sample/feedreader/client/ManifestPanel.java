@@ -91,7 +91,7 @@ public class ManifestPanel extends WallToWallPanel {
         History.newItem("configuration");
       }
     });
-    
+
     // Start a timer to refresh the feed data.
     (new Timer() {
       public void run() {
@@ -124,7 +124,7 @@ public class ManifestPanel extends WallToWallPanel {
       p = new FeedPanel(feed, this);
       feedPanelMap.put(feed, p);
     }
-    
+
     if (entryUrl == null) {
       p.enter();
     } else {
@@ -138,18 +138,6 @@ public class ManifestPanel extends WallToWallPanel {
 
   void setDirty() {
     dirty = true;
-  }
-  
-  void showAbout() {
-    (new ConfigurationPanel(configuration, this)).showAbout();
-  }
-
-  void showConfiguration() {
-    (new ConfigurationPanel(configuration, this)).enter();
-  }
-  
-  void showSearch(String search) {
-    (new ConfigurationPanel(configuration, this)).showSearch(search);
   }
 
   private void refresh() {

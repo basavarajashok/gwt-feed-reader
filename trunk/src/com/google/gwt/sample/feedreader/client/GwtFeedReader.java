@@ -161,9 +161,10 @@ public class GwtFeedReader implements EntryPoint {
     }
 
     token = URL.decodeComponent(token);
-    
+
     if ("about".equals(token)) {
-      manifest.showAbout();
+      ConfigurationPanel cp = new ConfigurationPanel(configuration, manifest);
+      cp.showAbout();
       return;
     }
 
@@ -173,18 +174,20 @@ public class GwtFeedReader implements EntryPoint {
     }
 
     if ("configuration".equals(token)) {
-      manifest.showConfiguration();
+      ConfigurationPanel cp = new ConfigurationPanel(configuration, manifest);
+      cp.enter();
       return;
     }
-    
+
     if (token.startsWith("search||")) {
-      manifest.showSearch(token.substring(8));
+      ConfigurationPanel cp = new ConfigurationPanel(configuration, manifest);
+      cp.showSearch(token.substring(8));
       return;
     }
-    
+
     String feedUrl;
     String entryUrl;
-    
+
     if (token.indexOf("||") != -1) {
       String[] halves = token.split("\\|\\|");
       feedUrl = halves[0];
