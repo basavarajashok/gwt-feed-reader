@@ -177,6 +177,11 @@ public class GwtFeedReader implements EntryPoint {
       return;
     }
     
+    if (token.startsWith("search||")) {
+      manifest.showSearch(token.substring(8));
+      return;
+    }
+    
     String feedUrl;
     String entryUrl;
     

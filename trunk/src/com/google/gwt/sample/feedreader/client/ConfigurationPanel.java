@@ -15,6 +15,7 @@
  */
 package com.google.gwt.sample.feedreader.client;
 
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
@@ -49,7 +50,7 @@ public class ConfigurationPanel extends WallToWallPanel {
         exit();
       }
     });
-    
+
     add(new PanelLabel("About...", new Command() {
       public void execute() {
         History.newItem("about");
@@ -71,10 +72,7 @@ public class ConfigurationPanel extends WallToWallPanel {
         public void execute() {
           final String query = Window.prompt("Search query", "");
           if ((query != null) && (query.length() > 0)) {
-            FeedSelectPanel selector =
-                new FeedSelectPanel(ConfigurationPanel.this, configuration,
-                    query);
-            selector.enter();
+            History.newItem("search||" + URL.encodeComponent(query));
           }
         }
       }));
@@ -86,7 +84,7 @@ public class ConfigurationPanel extends WallToWallPanel {
       addFeed(feed);
     }
   }
-  
+
   public void enter() {
     super.enter();
     History.newItem("configuration");
@@ -134,5 +132,11 @@ public class ConfigurationPanel extends WallToWallPanel {
 
   void showAbout() {
     (new AboutPanel(this)).enter();
+  }
+
+  void showSearch(String query) {
+    FeedSelectPanel selector =
+        new FeedSelectPanel(ConfigurationPanel.this, configuration, query);
+    selector.enter();
   }
 }
