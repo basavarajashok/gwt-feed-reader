@@ -15,8 +15,8 @@
  */
 package com.google.gwt.ajaxfeed.client.impl;
 
-import com.google.gwt.libideas.client.ImmutableResourceBundle;
-import com.google.gwt.libideas.client.TextResource;
+import com.google.gwt.libideas.resources.client.ImmutableResourceBundle;
+import com.google.gwt.libideas.resources.client.TextResource;
 
 /**
  * Static resources used by the AJAX Feed API.

@@ -16,9 +16,9 @@
 package com.google.gwt.sample.feedreader.client.resources;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.libideas.client.DataResource;
-import com.google.gwt.libideas.client.ImmutableResourceBundle;
-import com.google.gwt.libideas.client.TextResource;
+import com.google.gwt.libideas.resources.client.DataResource;
+import com.google.gwt.libideas.resources.client.ImmutableResourceBundle;
+import com.google.gwt.libideas.resources.client.TextResource;
 
 /**
  * A ResourceBundle that holds the references to the resources used by
